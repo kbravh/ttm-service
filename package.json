@@ -8,7 +8,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.28.5",
     "autoprefixer": "^10.4.0",
+    "nanoid": "^3.1.30",
     "next": "12.0.7",
     "postcss": "^8.4.4",
     "react": "17.0.2",
