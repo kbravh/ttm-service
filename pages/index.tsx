@@ -1,8 +1,8 @@
 import type { NextPage } from 'next'
-import { supabase } from '../utils/supabase'
+import { useUser } from '../context/user'
 
 const Home: NextPage = () => {
-  console.log(supabase.auth.user())
+  const {user} = useUser()
   return (
     <div>
       Welcome to TTM Service. Sign up or login.
