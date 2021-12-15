@@ -1,11 +1,11 @@
-import { User } from "@supabase/supabase-js";
+import { Provider, User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 
 export interface UserContext {
   user: User | null
-  login: () => void
+  login: (service: Provider) => void
   logout: () => void
 }
 
@@ -35,9 +35,9 @@ const Provider: React.FC =  ({children}) => {
     })
   }, [])
 
-  const login = async () => {
+  const login = async (service: Provider) => {
     await supabase.auth.signIn({
-      provider: 'github'
+      provider: service
     })
   }
 
