@@ -1,10 +1,11 @@
-import { Provider, User } from "@supabase/supabase-js";
+import { Provider } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { UserProfile } from "../types/database";
 import { supabase } from "../utils/supabase";
 
 export interface UserContext {
-  user: User | null
+  user: UserProfile | null
   login: (service: Provider) => void
   logout: () => void
 }
