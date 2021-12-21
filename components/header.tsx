@@ -1,32 +1,40 @@
+import { Disclosure } from '@headlessui/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useUser } from '../context/user';
 
 export const Header = () => {
   const { user } = useUser();
   return (
-    <div className="md:flex md:items-center md:justify-between py-7 px-10 shadow-sm">
-      <div className="flex-1 min-w-0">
-        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Tweet to Markdown</h2>
-      </div>
-      <div className="mt-4 flex md:mt-0 md:ml-4">
-        {!user && (
-          <>
-            <Link href="/login">
-              <a className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign in</a>
-            </Link>
-            <Link href="/signup">
-              <a className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Sign up
-              </a>
-            </Link>
-          </>
-        )}
-        {user && (
-          <Link href="/logout">
-            <a className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign out</a>
-          </Link>
-        )}
-      </div>
-    </div>
+    <Disclosure as="nav" className="bg-white shadow-sm">
+      {() => (
+        <>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex">
+                <div className="flex-shrink-0 flex items-center">
+                  <img className="block lg:hidden h-8 w-auto" src="/ttm.png" alt="Tweet to Markdown" />
+                  <img className="hidden lg:block h-8 w-auto" src="/ttm_full.png" alt="Tweet to Markdown" />
+                </div>
+              </div>
+              <div className="ml-6 flex items-center">
+                {!user && (
+                  <Link href="/login">
+                  <a type="button" className="bg-white p-1 rounded-full text-slate-500 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span>Login</span>
+                  </a></Link>
+                )}
+                {user && (
+                  <Link href="/logout">
+                  <a type="button" className="bg-white p-1 rounded-full text-slate-500 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span>Logout</span>
+                  </a></Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </Disclosure>
   );
 };
