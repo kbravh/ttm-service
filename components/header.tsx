@@ -1,5 +1,4 @@
 import { Disclosure } from '@headlessui/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useUser } from '../context/user';
 
@@ -14,7 +13,9 @@ export const Header = () => {
               <div className="flex">
                 <Link href="/">
                   <a className="flex-shrink-0 flex items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img className="block lg:hidden h-8 w-auto" src="/ttm.png" alt="Tweet to Markdown" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img className="hidden lg:block h-8 w-auto" src="/ttm_full.png" alt="Tweet to Markdown" />
                   </a>
                 </Link>
