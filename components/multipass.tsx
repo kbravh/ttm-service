@@ -3,7 +3,7 @@ import { useUser } from '../context/user';
 export const Multipass = () => {
   const { user } = useUser();
 
-  const generateAPIKey = async () => {
+  const generateOwnKey = async () => {
     console.log('generating new api key...');
   };
 
@@ -18,7 +18,7 @@ export const Multipass = () => {
           <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500 text-left">API Key</dt>
             <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <span className="flex-grow text-right">{user?.key ?? 'Generate a key'}</span>
+              <span className="flex-grow text-right">{user?.key ?? <button onClick={() => generateOwnKey()}>Generate a key</button>}</span>
             </dd>
           </div>
           {/* <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

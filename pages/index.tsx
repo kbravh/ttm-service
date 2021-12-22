@@ -2,12 +2,20 @@ import Head from 'next/head';
 import type { NextPage } from 'next';
 import { useUser } from '../context/user';
 import { Header } from '../components/header';
-import { Multipass } from '../components/multipass';
 import Link from 'next/link';
 import { AppLinks } from '../components/appLinks';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
   const { user } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/account');
+    }
+  });
   return (
     <>
       <Head>
@@ -22,31 +30,23 @@ const Home: NextPage = () => {
             Save tweets as <span className="bg-clip-text text-transparent bg-gradient-to-tr from-emerald-400 to-indigo-500">beautiful</span> Markdown.
           </h2>
           <div className="w-full flex flex-col items-center prose prose-slate">
-            {user && (
-              <>
-                <p className="mt-5 mb-2">Please find your API information below.</p>
-                <Multipass />
-              </>
-            )}
-            {!user && (
-              <>
-                <p className="my-5">Tweet to Markdown helps you archive the knowledge and insights you find on Twitter. Build up your personal knowledge base and avoid losing information in the ephemeral internet.</p>
+            <>
+              <p className="my-5">Tweet to Markdown helps you archive the knowledge and insights you find on Twitter. Build up your personal knowledge base and avoid losing information in the ephemeral internet.</p>
 
-                <p>To get started, download the Obsidian plugin or the CLI app. </p>
+              <p>To get started, download the Obsidian plugin or the CLI app. </p>
 
-                <AppLinks />
+              <AppLinks />
 
-                <p>Then, sign up to get a free API key.</p>
+              <p>Then, sign up to get a free API key.</p>
 
-                <div className="flex flex-col items-center">
-                  <Link href="/signup">
-                    <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
-                      Sign up
-                    </a>
-                  </Link>
-                </div>
-              </>
-            )}
+              <div className="flex flex-col items-center">
+                <Link href="/signup">
+                  <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
+                    Sign up
+                  </a>
+                </Link>
+              </div>
+            </>
           </div>
         </div>
       </div>
