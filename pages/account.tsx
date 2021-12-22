@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { ClientOnly } from '../components/clientOnly';
-import { Header } from '../components/header';
 import { Multipass } from '../components/multipass';
 import { useUser } from '../context/user';
 
@@ -18,7 +17,6 @@ const Account: NextPage = () => {
   }, [user, router]);
   return (
     <>
-      <Header />
       <Head>
         <title>Account | Tweet to Markdown</title>
         <link rel="preload" href="/fonts/Cartridge-Regular.woff2" as="font" crossOrigin="" />

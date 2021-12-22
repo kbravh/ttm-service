@@ -22,7 +22,6 @@ const Home: NextPage = () => {
         <title>Tweet to Markdown</title>
         <link rel="preload" href="/fonts/Cartridge-Regular.woff2" as="font" crossOrigin="" />
       </Head>
-      <Header />
 
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md md:max-w-4xl flex flex-col items-center text-center text-slate-700 text-lg px-4 sm:px-6">

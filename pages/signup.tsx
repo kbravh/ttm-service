@@ -2,19 +2,21 @@ import Link from 'next/link';
 import { NextPage } from 'next';
 import { useUser } from '../context/user';
 import { useRouter } from 'next/router';
-import { Header } from '../components/header';
+import Head from 'next/head';
 
 const Signup: NextPage = () => {
   const { login, user } = useUser();
-  const router = useRouter()
+  const router = useRouter();
 
   if (user) {
-    router.push('/')
+    router.push('/');
   }
 
   return (
     <>
-    <Header />
+      <Head>
+        <title>Signup | Tweet to Markdown</title>
+      </Head>
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-800">Sign up for an account</h2>
