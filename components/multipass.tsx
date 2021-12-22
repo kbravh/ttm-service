@@ -19,11 +19,6 @@ export const Multipass = () => {
             <dt className="text-sm font-medium text-gray-500 text-left">API Key</dt>
             <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               <span className="flex-grow text-right">{user?.key ?? 'Generate a key'}</span>
-              {/* <span className="ml-4 flex-shrink-0">
-                <button onClick={() => generateAPIKey()} type="button" className="bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Re-generate
-                </button>
-              </span> */}
             </dd>
           </div>
           {/* <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

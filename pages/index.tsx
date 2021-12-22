@@ -11,6 +11,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
+        <title>Tweet to Markdown</title>
         <link rel="preload" href="/fonts/Cartridge-Regular.woff2" as="font" crossOrigin="" />
       </Head>
       <Header />
@@ -23,7 +24,7 @@ const Home: NextPage = () => {
           <div className="w-full flex flex-col items-center prose prose-slate">
             {user && (
               <>
-                <p className="my-5">Please find your API information below.</p>
+                <p className="mt-5 mb-2">Please find your API information below.</p>
                 <Multipass />
               </>
             )}

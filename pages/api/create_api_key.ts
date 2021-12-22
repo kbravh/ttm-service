@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { NextApiHandler } from 'next';
-import { User } from '../../types/database';
+import { UserProfile } from '../../types/database';
 
 const adminSupabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
@@ -23,7 +23,7 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
   const key = 'TTM>' + nanoid(15);
 
   await adminSupabase
-    .from<User>('users')
+    .from<UserProfile>('users')
     .update({
       key,
       last_active_at: new Date(),
