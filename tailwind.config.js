@@ -7,6 +7,15 @@ module.exports = {
     extend: {
       fontFamily: {
         header: ['Cartridge']
+      },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(70deg)' },
+          '50%': { transform: 'rotate(10deg)' },
+        }
+      },
+      animation: {
+        wiggle: 'wiggle 3s ease-in-out infinite',
       }
     }
   },

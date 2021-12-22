@@ -10,12 +10,15 @@ export interface UserContext {
   login: (service: Provider) => void;
   logout: () => void;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+
+  isUserLoading: boolean;
 }
 
-const context = createContext<UserContext>({ user: null, login: () => {}, logout: () => {}, setUser: () => {} });
+const context = createContext<UserContext>({ user: null, login: () => {}, logout: () => {}, setUser: () => {}, isUserLoading: true });
 
 const Provider: React.FC = ({ children }) => {
   const [user, setUser] = useState(supabase.auth.user());
+  const [isUserLoading, setIsUserLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,6 +32,8 @@ const Provider: React.FC = ({ children }) => {
           ...sessionUser,
           ...user,
         });
+
+        setIsUserLoading(false);
       }
     };
     getUserProfile();
@@ -62,6 +67,7 @@ const Provider: React.FC = ({ children }) => {
     login,
     logout,
     setUser,
+    isUserLoading
   };
   return <context.Provider value={exposed}>{children}</context.Provider>;
 };
