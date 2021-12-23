@@ -44,10 +44,18 @@ const Provider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    axios.post('/api/set_cookie', {
-      event: user ? 'SIGNED_IN' : 'SIGNED_OUT',
-      session: supabase.auth.session(),
-    });
+    let data = {};
+    if (!supabase.auth.session()) {
+      data = {
+        event: 'SIGNED_OUT',
+      };
+    } else {
+      data = {
+        event: user ? 'SIGNED_IN' : 'SIGNED_OUT',
+        session: supabase.auth.session(),
+      };
+    }
+    axios.post('/api/set_cookie', data);
   }, [user]);
 
   const login = async (service: Provider) => {
@@ -67,7 +75,7 @@ const Provider: React.FC = ({ children }) => {
     login,
     logout,
     setUser,
-    isUserLoading
+    isUserLoading,
   };
   return <context.Provider value={exposed}>{children}</context.Provider>;
 };

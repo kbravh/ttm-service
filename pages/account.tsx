@@ -1,20 +1,12 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { ClientOnly } from '../components/clientOnly';
 import { Multipass } from '../components/multipass';
 import { useUser } from '../context/user';
+import { supabase } from '../utils/supabase';
 
 const Account: NextPage = () => {
   const { user } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/login');
-    }
-  }, [user, router]);
   return (
     <>
       <Head>
@@ -41,3 +33,21 @@ const Account: NextPage = () => {
 };
 
 export default Account;
+
+export const getServerSideProps = async ({req}: {req: Request}) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req)
+
+  if (!user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/login'
+      },
+      props: {}
+    }
+  }
+
+  return {
+    props: {}
+  }
+}

@@ -1,10 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
-import { supabase } from '../../utils/supabase';
-
-const adminSupabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '', process.env.PRIVATE_SUPABASE_KEY ?? '');
+import { getAdminSupabase, supabase } from '../../utils/supabase';
 
 /**
  * This API is called whenever a user wants to generate an API key.
@@ -17,6 +14,8 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
   }
 
   const key = 'TTM>' + nanoid(15);
+
+  const adminSupabase = getAdminSupabase()
 
   const { data: updatedUser } = await adminSupabase
     .from<UserProfile>('users')

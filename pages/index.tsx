@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import type { NextPage } from 'next';
 import { useUser } from '../context/user';
-import { Header } from '../components/header';
 import Link from 'next/link';
 import { AppLinks } from '../components/appLinks';
 import { useEffect } from 'react';
