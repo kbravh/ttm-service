@@ -59,9 +59,14 @@ const Provider: React.FC = ({ children }) => {
   }, [user]);
 
   const login = async (service: Provider) => {
-    await supabase.auth.signIn({
-      provider: service,
-    });
+    await supabase.auth.signIn(
+      {
+        provider: service,
+      },
+      {
+        redirectTo: 'https://ttm.kbravh.dev/account',
+      },
+    );
   };
 
   const logout = async () => {
