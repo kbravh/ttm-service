@@ -22,7 +22,7 @@ const Login: NextPage = () => {
               <div className="relative group flex justify-center">
                 <button
                   onClick={() => login({ provider: 'twitter' })}
-                  className="relative block px-5 py-2 rounded-md no-underline bg-slate-800 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700"
+                  className="relative block px-5 py-2 rounded-md no-underline bg-slate-800 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 hover:bg-gradient-to-tr from-emerald-400 to-indigo-500"
                 >
                   <span className="flex items-center space-x-2">
                     <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -35,7 +35,7 @@ const Login: NextPage = () => {
               <div className="relative group flex justify-center">
                 <button
                   onClick={() => login({ provider: 'github' })}
-                  className="relative block px-5 py-2 rounded-md no-underline bg-slate-800 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700"
+                  className="relative block px-5 py-2 rounded-md no-underline bg-slate-800 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 hover:bg-gradient-to-tr from-emerald-400 to-indigo-500"
                 >
                   <span className="flex items-center space-x-2">
                     <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
