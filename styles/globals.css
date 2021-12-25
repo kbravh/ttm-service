@@ -17,3 +17,7 @@ html {
 body {
   @apply h-full;
 }
+
+#__next {
+  @apply h-full flex flex-col justify-between;
+}
