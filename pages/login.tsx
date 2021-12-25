@@ -16,7 +16,7 @@ const Login: NextPage = () => {
   return (
     <>
       <MainWrapper title="Log in" header="You&#39;re almost ready!">
-        <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-full flex flex-col justify-center sm:px-6 lg:px-8">
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 space-y-3 sm:space-y-0">
               <div className="relative group flex justify-center">
@@ -50,6 +50,16 @@ const Login: NextPage = () => {
                 </button>
               </div>
             </div>
+            <p className="mt-4">
+              By using the service, you agree to the{' '}
+              <Link href="/terms-of-service">
+                <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Terms of Service</a>
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy-policy">
+                <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Privacy Policy</a>
+              </Link>
+            </p>
           </div>
         </div>
       </MainWrapper>
