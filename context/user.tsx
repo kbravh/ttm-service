@@ -1,4 +1,4 @@
-import { Provider, User } from '@supabase/supabase-js';
+import { Provider, User, UserCredentials } from '@supabase/supabase-js';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -7,7 +7,7 @@ import { supabase } from '../utils/supabase';
 
 export interface UserContext {
   user: UserProfile | null;
-  login: (service: Provider) => void;
+  login: (credentials: UserCredentials) => void;
   logout: () => void;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 
@@ -58,11 +58,9 @@ const Provider: React.FC = ({ children }) => {
     axios.post('/api/set_cookie', data);
   }, [user]);
 
-  const login = async (service: Provider) => {
+  const login = async (credentials: UserCredentials) => {
     await supabase.auth.signIn(
-      {
-        provider: service,
-      },
+      credentials,
       {
         redirectTo: 'https://ttm.kbravh.dev/account',
       },

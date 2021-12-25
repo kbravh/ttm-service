@@ -38,7 +38,7 @@ const Home: NextPage = () => {
               <p>Then, sign up to get a free API key.</p>
 
               <div className="flex flex-col items-center">
-                <Link href="/signup">
+                <Link href="/login">
                   <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
                     Sign up
                   </a>
