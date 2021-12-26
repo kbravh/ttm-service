@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { AppLinks } from '../components/appLinks';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { Layout } from '../components/layout';
 
 const Home: NextPage = () => {
   const { user } = useUser();
@@ -16,7 +17,7 @@ const Home: NextPage = () => {
     }
   });
   return (
-    <>
+    <Layout>
       <Head>
         <title>Tweet to Markdown</title>
         <link rel="preload" href="/fonts/Cartridge-Regular.woff2" as="font" crossOrigin="" />
@@ -38,7 +39,7 @@ const Home: NextPage = () => {
               <p>Then, sign up to get a free API key.</p>
 
               <div className="flex flex-col items-center">
-                <Link href="/login">
+                <Link href="/login" scroll={false}>
                   <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
                     Sign up
                   </a>
@@ -48,7 +49,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </Layout>
   );
 };
 

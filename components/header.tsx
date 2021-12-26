@@ -22,7 +22,7 @@ export const Header = () => {
             <div className="flex justify-between h-16">
               {/* logo */}
               <div className="flex">
-                <Link href="/">
+                <Link href="/" scroll={false}>
                   <a className="flex-shrink-0 flex items-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img className="block lg:hidden h-8 w-auto" src="/ttm.png" alt="Tweet to Markdown" />
@@ -83,7 +83,7 @@ export const Header = () => {
                 {!user && (
                   <div className="ml-6 flex items-center">
                     {!user && (
-                      <Link href="/login">
+                      <Link href="/login" scroll={false}>
                         <a type="button" className="bg-white p-1 rounded-full text-slate-500 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                           <span>Login</span>
                         </a>

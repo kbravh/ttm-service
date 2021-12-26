@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { NextPage } from 'next';
 import { useUser } from '../context/user';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { MainWrapper } from '../components/mainWrapper';
+import { Layout } from '../components/layout';
 
 const Login: NextPage = () => {
   const { login, user } = useUser();
@@ -14,7 +14,7 @@ const Login: NextPage = () => {
   }
 
   return (
-    <>
+    <Layout title='Login'>
       <MainWrapper title="Log in" header="You&#39;re almost ready!">
         <div className="min-h-full flex flex-col justify-center sm:px-6 lg:px-8">
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -52,18 +52,18 @@ const Login: NextPage = () => {
             </div>
             <p className="mt-4">
               By using the service, you agree to the{' '}
-              <Link href="/terms-of-service">
+              <Link href="/terms-of-service" scroll={false}>
                 <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Terms of Service</a>
               </Link>{' '}
               and{' '}
-              <Link href="/privacy-policy">
+              <Link href="/privacy-policy" scroll={false}>
                 <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Privacy Policy</a>
               </Link>
             </p>
           </div>
         </div>
       </MainWrapper>
-    </>
+    </Layout>
   );
 };
 

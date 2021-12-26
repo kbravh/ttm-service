@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { ClientOnly } from '../components/clientOnly';
+import { Layout } from '../components/layout';
 import { MainWrapper } from '../components/mainWrapper';
 import { Multipass } from '../components/multipass';
 import { useUser } from '../context/user';
@@ -8,7 +9,7 @@ import { supabase } from '../utils/supabase';
 const Account: NextPage = () => {
   const { user } = useUser();
   return (
-    <>
+    <Layout title='Account'>
       <MainWrapper title="Account">
         <ClientOnly>
           {user && (
@@ -21,7 +22,7 @@ const Account: NextPage = () => {
           )}
         </ClientOnly>
       </MainWrapper>
-    </>
+    </Layout>
   );
 };
 
