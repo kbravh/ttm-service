@@ -23,7 +23,7 @@ export const Header = () => {
               {/* logo */}
               <div className="flex">
                 <Link href="/" scroll={false}>
-                  <a className="flex-shrink-0 flex items-center">
+                  <a className="flex-shrink-0 flex items-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img className="block lg:hidden h-8 w-auto" src="/ttm.png" alt="Tweet to Markdown" />
                     {/* eslint-disable-next-line @next/next/no-img-element */}

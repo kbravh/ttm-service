@@ -12,10 +12,10 @@ export const Footer = () => {
           <div className="flex flex-col">
             <h5>Links</h5>
             <Link href="/terms-of-service" scroll={false}>
-              <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Terms of Service</a>
+              <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Terms of Service</a>
             </Link>
             <Link href="/privacy-policy" scroll={false}>
-              <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Privacy Policy</a>
+              <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Privacy Policy</a>
             </Link>
           </div>
         </div>

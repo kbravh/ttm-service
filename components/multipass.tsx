@@ -61,7 +61,7 @@ export const Multipass = () => {
                     {keyState === 'error' && <span className="flex-grow text-red-900">Error</span>}
                     {keyState === 'loading' && (
                       <span className="flex-grow flex justify-center items-center">
-                        <KeyIcon className="h-4 w-auto animate-wiggle text-emerald-600" />
+                        <KeyIcon className="h-4 w-auto animate-key_wiggle text-emerald-600" />
                       </span>
                     )}
                   </dd>

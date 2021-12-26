@@ -9,13 +9,13 @@ module.exports = {
         header: ['Cartridge']
       },
       keyframes: {
-        wiggle: {
+        key_wiggle: {
           '0%, 100%': { transform: 'rotate(70deg)' },
           '50%': { transform: 'rotate(10deg)' },
-        }
+        },
       },
       animation: {
-        wiggle: 'wiggle 3s ease-in-out infinite',
+        key_wiggle: 'key_wiggle 3s ease-in-out infinite',
       }
     }
   },

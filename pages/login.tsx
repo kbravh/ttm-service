@@ -53,11 +53,11 @@ const Login: NextPage = () => {
             <p className="mt-4">
               By using the service, you agree to the{' '}
               <Link href="/terms-of-service" scroll={false}>
-                <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Terms of Service</a>
+                <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Terms of Service</a>
               </Link>{' '}
               and{' '}
               <Link href="/privacy-policy" scroll={false}>
-                <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400">Privacy Policy</a>
+                <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Privacy Policy</a>
               </Link>
             </p>
           </div>
