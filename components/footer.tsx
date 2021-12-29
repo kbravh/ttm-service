@@ -6,7 +6,7 @@ export const Footer = () => {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-5xl">
         <div className="py-8 text-sm text-gray-500 text-center sm:text-left flex flex-col justify-between sm:flex-row">
           <div className="order-last sm:order-none sm:flex sm:items-center mt-3 sm:mt-0">
-            <span className="block sm:inline mr-1">&copy; 2021-present Karey Higuera.</span>
+            <span className="block sm:inline mr-1">&copy; 2021-present <a href="https://kbravh.dev" className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Karey Higuera</a>.</span>
             <span className="block sm:inline">All rights reserved.</span>
           </div>
           <div className="flex flex-col">
