@@ -4,6 +4,7 @@ import { useUser } from '../context/user';
 import { useRouter } from 'next/router';
 import { MainWrapper } from '../components/mainWrapper';
 import { Layout } from '../components/layout';
+import { supabase } from '../utils/supabase';
 
 const Login: NextPage = () => {
   const { login, user } = useUser();
@@ -68,3 +69,21 @@ const Login: NextPage = () => {
 };
 
 export default Login;
+
+export const getServerSideProps = async ({ req }: { req: Request }) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+
+  if (user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/account',
+      },
+      props: {user},
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

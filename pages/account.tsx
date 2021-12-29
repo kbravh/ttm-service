@@ -4,10 +4,15 @@ import { Layout } from '../components/layout';
 import { MainWrapper } from '../components/mainWrapper';
 import { Multipass } from '../components/multipass';
 import { useUser } from '../context/user';
+import { UserProfile } from '../types/database';
 import { supabase } from '../utils/supabase';
 
-const Account: NextPage = () => {
-  const { user } = useUser();
+interface Props {
+  user: UserProfile | null
+}
+
+const Account: NextPage<Props> = ({user}) => {
+  ({ user } = useUser());
   return (
     <Layout title='Account'>
       <MainWrapper title="Account">
@@ -42,6 +47,6 @@ export const getServerSideProps = async ({ req }: { req: Request }) => {
   }
 
   return {
-    props: {},
+    props: {user},
   };
 };

@@ -6,16 +6,16 @@ import { AppLinks } from '../components/appLinks';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Layout } from '../components/layout';
+import { supabase } from '../utils/supabase';
+import { UserProfile } from '../types/database';
 
-const Home: NextPage = () => {
-  const { user } = useUser();
-  const router = useRouter();
+interface Props {
+  user: UserProfile | null;
+}
 
-  useEffect(() => {
-    if (user) {
-      router.push('/account');
-    }
-  });
+const Home: NextPage<Props> = ({ user }) => {
+  ({ user } = useUser());
+
   return (
     <Layout>
       <Head>
@@ -26,25 +26,52 @@ const Home: NextPage = () => {
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md md:max-w-4xl flex flex-col items-center text-center text-slate-700 text-lg px-4 sm:px-6">
           <h2 className="font-header text-6xl text-slate-800">
-            Save tweets as <span className="bg-clip-text text-transparent bg-gradient-to-tr from-emerald-400 to-indigo-500">beautiful</span> Markdown.
+            {user && (
+              <>
+                You&#39;re ready to save tweets as <span className="bg-clip-text text-transparent bg-gradient-to-tr from-emerald-400 to-indigo-500">beautiful</span> Markdown.
+              </>
+            )}
+            {!user && (
+              <>
+                Save tweets as <span className="bg-clip-text text-transparent bg-gradient-to-tr from-emerald-400 to-indigo-500">beautiful</span> Markdown.
+              </>
+            )}
           </h2>
           <div className="w-full flex flex-col items-center prose prose-slate">
             <>
-              <p className="my-5">Tweet to Markdown helps you archive the knowledge and insights you find on Twitter. Build up your personal knowledge base and avoid losing information in the ephemeral internet.</p>
+              {!user && (
+                <>
+                  <p className="my-5">Tweet to Markdown helps you archive the knowledge and insights you find on Twitter. Build up your personal knowledge base and avoid losing information in the ephemeral internet.</p>
 
-              <p>To get started, download the Obsidian plugin or the CLI app. </p>
+                  <p>To get started, download the Obsidian plugin or the CLI app. </p>
+                  <AppLinks />
+                  <p>Then, sign up to get a free API key.</p>
 
-              <AppLinks />
+                  <div className="flex flex-col items-center">
+                    <Link href="/login" scroll={false}>
+                      <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-gradient-to-tr from-emerald-400 to-indigo-500 hover:scale-105 transition duration-100 transform-gpu focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
+                        Sign up
+                      </a>
+                    </Link>
+                  </div>
+                </>
+              )}
 
-              <p>Then, sign up to get a free API key.</p>
+              {user && (
+                <>
+                  <p className='mt-5'>To get started, download the Obsidian plugin or the CLI app. </p>
+                  <AppLinks />
 
-              <div className="flex flex-col items-center">
-                <Link href="/login" scroll={false}>
-                  <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-gradient-to-tr from-emerald-400 to-indigo-500 hover:scale-105 transition duration-100 transform-gpu focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
-                    Sign up
-                  </a>
-                </Link>
-              </div>
+                  <p>Then, head to your account page for your API key.</p>
+                  <div className="flex flex-col items-center">
+                    <Link href="/account" scroll={false}>
+                      <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-gradient-to-tr from-emerald-400 to-indigo-500 hover:scale-105 transition duration-100 transform-gpu focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
+                        My account
+                      </a>
+                    </Link>
+                  </div>
+                </>
+              )}
             </>
           </div>
         </div>
@@ -54,3 +81,17 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getServerSideProps = async ({ req }: { req: Request }) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+
+  if (user) {
+    return {
+      props: { user },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

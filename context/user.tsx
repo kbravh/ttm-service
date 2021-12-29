@@ -11,14 +11,16 @@ export interface UserContext {
   logout: () => void;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 
-  isUserLoading: boolean;
+  userState: UserStates;
 }
 
-const context = createContext<UserContext>({ user: null, login: () => {}, logout: () => {}, setUser: () => {}, isUserLoading: true });
+type UserStates = 'anon' | 'authed' | 'full';
+
+const context = createContext<UserContext>({ user: null, login: () => {}, logout: () => {}, setUser: () => {}, userState: 'anon' });
 
 const Provider: React.FC = ({ children }) => {
   const [user, setUser] = useState(supabase.auth.user());
-  const [isUserLoading, setIsUserLoading] = useState(true);
+  const [userState, setUserState] = useState<UserStates>('anon');
   const router = useRouter();
 
   useEffect(() => {
@@ -26,6 +28,7 @@ const Provider: React.FC = ({ children }) => {
       const sessionUser = supabase.auth.user();
 
       if (sessionUser) {
+        setUserState('authed');
         const { data: user } = await supabase.from('users').select('*').eq('id', sessionUser.id).single();
 
         setUser({
@@ -33,7 +36,7 @@ const Provider: React.FC = ({ children }) => {
           ...user,
         });
 
-        setIsUserLoading(false);
+        setUserState('full');
       }
     };
     getUserProfile();
@@ -59,17 +62,15 @@ const Provider: React.FC = ({ children }) => {
   }, [user]);
 
   const login = async (credentials: UserCredentials) => {
-    await supabase.auth.signIn(
-      credentials,
-      {
-        redirectTo: 'https://ttm.kbravh.dev/account',
-      },
-    );
+    await supabase.auth.signIn(credentials, {
+      redirectTo: 'http://ttm.kbravh.dev/account',
+    });
   };
 
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
+    setUserState('anon');
     router.push('/');
   };
 
@@ -78,7 +79,7 @@ const Provider: React.FC = ({ children }) => {
     login,
     logout,
     setUser,
-    isUserLoading,
+    userState,
   };
   return <context.Provider value={exposed}>{children}</context.Provider>;
 };

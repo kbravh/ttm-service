@@ -7,7 +7,7 @@ import { KeyIcon } from '@heroicons/react/outline';
 type keyState = 'ready' | 'loading' | 'error';
 
 export const Multipass = () => {
-  const { isUserLoading, user, setUser } = useUser();
+  const { userState, user, setUser } = useUser();
   const [keyState, setKeyState] = useState<keyState>('loading');
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export const Multipass = () => {
 
   return (
     <>
-      {isUserLoading && <h2>Loading...</h2>}
-      {!isUserLoading && (
+      {userState === 'authed' && <h2>Loading...</h2>}
+      {userState === 'full' && (
         <>
           <div className="bg-white shadow overflow-hidden sm:rounded-lg text-left">
             <div className="px-4 py-5 sm:px-6">
