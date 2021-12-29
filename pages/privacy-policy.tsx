@@ -7,7 +7,7 @@ const PrivacyPolicy: NextPage = () => {
   return (
     <Layout title='Privacy Policy'>
       <MainWrapper title="Privacy Policy">
-        <p>Last updated: Dec. 25, 2021</p>
+        <p className='mt-5'>Last updated: Dec. 25, 2021</p>
         <main className="mt-5 prose prose-slate prose-headings:font-header">
           <p>Privacy policies should be easy to understand; you won't find any legalese here. This is just a quick explanation of how your data will be used in this service.</p>
           <h2>Personal Information</h2>
