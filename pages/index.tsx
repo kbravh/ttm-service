@@ -3,8 +3,6 @@ import type { NextPage } from 'next';
 import { useUser } from '../context/user';
 import Link from 'next/link';
 import { AppLinks } from '../components/appLinks';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { Layout } from '../components/layout';
 import { supabase } from '../utils/supabase';
 import { UserProfile } from '../types/database';
