@@ -44,7 +44,7 @@ const Home: NextPage<Props> = ({ user }) => {
                 <>
                   <p className="my-5">Tweet to Markdown helps you archive the knowledge and insights you find on Twitter. Build up your personal knowledge base and avoid losing information in the ephemeral internet.</p>
 
-                  <span className="mb-5 flex">To get started, download the <ObsidianLink/> plugin or the CLI app. </span>
+                  <span className="mb-5 block">To get started, download the <ObsidianLink/> plugin or the CLI app. </span>
                   <AppLinks />
                   <p>Then, sign up to get a free API key.</p>
 
@@ -60,7 +60,7 @@ const Home: NextPage<Props> = ({ user }) => {
 
               {user && (
                 <>
-                  <span className='my-5 flex'>To get started, download the <ObsidianLink/> plugin or the CLI app. </span>
+                  <span className='my-5 block'>To get started, download the <ObsidianLink/> plugin or the CLI app. </span>
                   <AppLinks />
 
                   <p>Then, head to your account page for your API key.</p>
