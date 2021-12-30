@@ -4,6 +4,7 @@ import { useUser } from '../context/user';
 import { MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline';
 import { Fragment } from 'react';
 import { ClientOnly } from './clientOnly';
+import Image from 'next/image';
 
 const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
@@ -42,8 +43,8 @@ export const Header = () => {
                         <div>
                           <Menu.Button className="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                             <span className="sr-only">Open user menu</span>
-                            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-emerald-400 to-indigo-500 flex items-center justify-center text-slate-50">
-                              <UserIcon width={24} height={24} />
+                            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-emerald-400 to-indigo-500 flex items-center justify-center text-slate-50 overflow-hidden">
+                              {user?.user_metadata?.avatar_url ? <Image src={user?.user_metadata?.avatar_url} alt="User avatar" height={32} width={32} /> : <UserIcon width={24} height={24} />}
                             </div>
                           </Menu.Button>
                         </div>

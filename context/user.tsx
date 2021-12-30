@@ -63,7 +63,8 @@ const Provider: React.FC = ({ children }) => {
 
   const login = async (credentials: UserCredentials) => {
     await supabase.auth.signIn(credentials, {
-      redirectTo: 'http://ttm.kbravh.dev/account',
+      redirectTo: 'http://localhost:3000/account',
+      // redirectTo: 'https://ttm.kbravh.dev/account',
     });
   };
 
