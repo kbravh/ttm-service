@@ -30,9 +30,10 @@ export const Layout: FC<Props> = ({ children, title, description }) => {
         <meta property="og:image" content="https://ttm.kbravh.dev/ttm_social.png?1" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="628" />
-        <meta property="twitter:description" content={description ?? "Save tweets as beautiful Markdown."} />
+        <meta property="og:description" content={description ?? "Save tweets as beautiful Markdown."} />
         <meta property="og:locale" content="en_US" />
         <meta property="twitter:title" content={`Tweet to Markdown${title ? ` | ${title}` : ''}`} />
+        <meta property="twitter:description" content={description ?? "Save tweets as beautiful Markdown."} />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:creator" content="@kbravh" />
         <meta property="twitter:image" content="https://ttm.kbravh.dev/ttm_social.png?1" />
