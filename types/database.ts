@@ -5,6 +5,18 @@ export interface UserProfile extends User {
   email?: string
   last_active_at?: Date | string
   key?: string
+  subscription_id: string;
+  subscription_start: Date | string
+  subscription_end?: Date | string
+  // proto property, inserted by join
+  subscriptions?: Subscription
+}
+
+export interface Subscription {
+  id: string
+  created_at: Date | string
+  price: number
+  limit: number
 }
 
 export interface TweetRecord {
