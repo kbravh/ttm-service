@@ -22,17 +22,15 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
     userId = req.body.user;
   }
 
-  const subscriptionRequest = adminSupabase.from<UserProfile>('users').select('subscriptions:subscription_id (*)').eq('id', req.body.user).single();
+  const subscriptionRequest = adminSupabase.from<UserProfile>('users').select('subscriptions:subscription_id (*)').eq('id', userId).single();
 
-  const usageRequest = adminSupabase.rpc<number>('monthly_usage', { user_ident: req.body.user });
+  const usageRequest = adminSupabase.rpc<number>('monthly_usage', { user_ident: userId });
 
-  const [{ data: user }, { data: count }] = await Promise.all([subscriptionRequest, usageRequest]);
-
-  console.log();
+  const [{ data: user }, { data: used }] = await Promise.all([subscriptionRequest, usageRequest]);
 
   res.send({
     limit: user?.subscriptions?.limit,
-    usage: count,
+    used,
   });
 };
 
