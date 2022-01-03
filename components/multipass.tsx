@@ -95,7 +95,7 @@ export const Multipass = () => {
                     {keyState === 'ready' && (
                       <>
                         <span className="flex flex-grow items-center">{user?.key ?? 'No key'}</span>
-                        <span className="sm:ml-4 flex-shrink-0">
+                        <span className="sm:ml-4">
                           <button type="button" onClick={() => generateOwnKey()} className="ml-2 rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                             Generate new key
                           </button>
