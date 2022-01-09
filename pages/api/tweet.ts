@@ -25,7 +25,14 @@ const handler: NextApiHandler = async (req, res) => {
 
   let params: URLSearchParams;
   try {
-    params = new URLSearchParams(req.body);
+    params = new URLSearchParams({
+      expansions: 'author_id,attachments.poll_ids,attachments.media_keys',
+      'user.fields': 'name,username,profile_image_url',
+      'tweet.fields':
+        'attachments,public_metrics,entities,conversation_id,referenced_tweets',
+      'media.fields': 'url,alt_text',
+      'poll.fields': 'options',
+    });
   } catch (error) {
     return res.status(400).send('Malformed request');
   }
