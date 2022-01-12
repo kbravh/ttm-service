@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Cors from 'cors'
+import Cors from 'cors';
 import { getAdminSupabase } from '../../utils/supabase';
 import { NextApiHandler } from 'next';
 import { runMiddleware } from '../../utils/runMiddleware';
@@ -9,7 +9,7 @@ import { Tweet } from '../../types/tweet';
 
 const cors = Cors({
   methods: ['GET', 'POST', 'OPTIONS'],
-})
+});
 
 const handler: NextApiHandler = async (req, res) => {
   await runMiddleware(req, res, cors);
@@ -35,8 +35,7 @@ const handler: NextApiHandler = async (req, res) => {
     params = new URLSearchParams({
       expansions: 'author_id,attachments.poll_ids,attachments.media_keys',
       'user.fields': 'name,username,profile_image_url',
-      'tweet.fields':
-        'attachments,public_metrics,entities,conversation_id,referenced_tweets',
+      'tweet.fields': 'attachments,public_metrics,entities,conversation_id,referenced_tweets',
       'media.fields': 'url,alt_text',
       'poll.fields': 'options',
     });
@@ -64,7 +63,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (tweetRequest?.status !== 200) {
-    return res.status(500).send(tweetRequest?.statusText)
+    return res.status(500).send(tweetRequest?.statusText);
   }
 
   const tweet: Tweet = tweetRequest?.data;
@@ -75,7 +74,7 @@ const handler: NextApiHandler = async (req, res) => {
     switch (tweet.reason) {
       case 'client-not-enrolled':
       default:
-        return res.status(400).send('There seems to be a problem with TTM\'s connection to Twitter.');
+        return res.status(400).send("There seems to be a problem with TTM's connection to Twitter.");
     }
   }
 
@@ -84,29 +83,29 @@ const handler: NextApiHandler = async (req, res) => {
 
   // save tweet data
   try {
-    await Promise.all([
-      adminSupabase.from<TweetRecord>('tweets').upsert(
-        {
-          last_retrieved_at: new Date(),
-          tweet_id: tweet.data.id,
-          author_id: tweet.data.author_id,
-        },
-        {
-          onConflict: 'tweet_id',
-          returning: 'minimal'
-        },
-      ),
-      adminSupabase.from<TweetRequest>('requests').insert({
+    await adminSupabase.from<TweetRecord>('tweets').upsert(
+      {
+        last_retrieved_at: new Date(),
+        tweet_id: tweet.data.id,
+        author_id: tweet.data.author_id,
+      },
+      {
+        onConflict: 'tweet_id',
+        returning: 'minimal',
+      },
+    );
+    await adminSupabase.from<TweetRequest>('requests').insert(
+      {
         tweet_id: tweet.data.id,
         user_id: user.id,
-      }, {
-        returning: 'minimal'
-      }),
-    ]);
-  } catch(error) {
-    console.error('There was an issue saving the tweet and record.')
+      },
+      {
+        returning: 'minimal',
+      },
+    );
+  } catch (error) {
+    console.error('There was an issue saving the tweet and record.');
   }
-
 };
 
 export default handler;
