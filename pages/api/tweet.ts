@@ -1,11 +1,18 @@
 import axios from 'axios';
+import Cors from 'cors'
 import { getAdminSupabase } from '../../utils/supabase';
 import { NextApiHandler } from 'next';
+import { runMiddleware } from '../../utils/runMiddleware';
 import { URLSearchParams } from 'url';
 import { TweetRecord, TweetRequest, UserProfile } from '../../types/database';
 import { Tweet } from '../../types/tweet';
 
+const cors = Cors({
+  methods: ['GET', 'POST', 'OPTIONS'],
+})
+
 const handler: NextApiHandler = async (req, res) => {
+  await runMiddleware(req, res, cors);
   const apiKey = req.headers.authorization?.split('Bearer ')?.[1] ?? '';
   if (!apiKey) {
     return res.status(401).send('Unauthorized');
@@ -56,15 +63,19 @@ const handler: NextApiHandler = async (req, res) => {
     }
   }
 
-  const tweet: Tweet = JSON.parse(tweetRequest?.data);
+  if (tweetRequest?.status !== 200) {
+    return res.status(500).send(tweetRequest?.statusText)
+  }
+
+  const tweet: Tweet = tweetRequest?.data;
   if (tweet?.errors) {
-    res.status(400).send(tweet.errors[0].detail);
+    return res.status(400).send(tweet.errors[0].detail);
   }
   if (tweet?.reason) {
     switch (tweet.reason) {
       case 'client-not-enrolled':
       default:
-        res.status(400).send('There seems to be a problem with your bearer token.');
+        return res.status(400).send('There seems to be a problem with TTM\'s connection to Twitter.');
     }
   }
 
