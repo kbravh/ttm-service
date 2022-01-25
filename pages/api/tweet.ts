@@ -54,6 +54,10 @@ const handler: NextApiHandler = async (req, res) => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.request) {
+        const response = error.response?.data;
+        if (response?.data?.errors?.message.includes("The `id` query parameter value")) {
+          return res.status(400).send('The tweet Id is invalid.')
+        }
         return res.status(500).send('There seems to be a connection issue on our end.');
       } else {
         console.error(error);
