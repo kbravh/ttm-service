@@ -1,8 +1,9 @@
 import { useUser } from '../context/user';
 import axios from 'axios';
 import { UserProfile } from '../types/database';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyIcon } from '@heroicons/react/outline';
+import { wait } from '../utils/timers';
 
 type keyState = 'ready' | 'loading' | 'error';
 
@@ -15,6 +16,7 @@ export const Multipass = () => {
   const { userState, user, setUser } = useUser();
   const [keyState, setKeyState] = useState<keyState>('loading');
   const [usage, setUsage] = useState<Usage | null>();
+  const copyButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setKeyState('ready');
@@ -28,9 +30,18 @@ export const Multipass = () => {
           setUsage(usage);
         }
       }
-    }
-    fetchUsage()
+    };
+    fetchUsage();
   }, [userState]);
+
+  const copyKeyToClipboard = async () => {
+    await navigator.clipboard.writeText(user?.key ?? '');
+    if (copyButtonRef.current) {
+      copyButtonRef.current.innerText = 'Copied!'
+      await wait(3000)
+      copyButtonRef.current.innerText = 'Copy key'
+    }
+  };
 
   const generateOwnKey = async () => {
     setKeyState('loading');
@@ -95,11 +106,13 @@ export const Multipass = () => {
                     {keyState === 'ready' && (
                       <>
                         <span className="flex flex-grow items-center">{user?.key ?? 'No key'}</span>
-                        <span className="sm:ml-4">
-                          <button type="button" onClick={() => generateOwnKey()} className="ml-2 rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                            Generate new key
-                          </button>
-                        </span>
+                        {user?.key && (
+                          <span className="sm:ml-4">
+                            <button type="button" onClick={() => copyKeyToClipboard()} ref={copyButtonRef} className="ml-2 rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                              Copy key
+                            </button>
+                          </span>
+                        )}
                       </>
                     )}
                     {keyState === 'error' && <span className="flex-grow text-red-900">Error</span>}
@@ -115,7 +128,7 @@ export const Multipass = () => {
                     <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">Tweets used</dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex">
-                        <span className='flex-grow'>
+                        <span className="flex-grow">
                           {usage?.used}/{usage?.limit}
                         </span>
                         <span>Resets each month</span>
@@ -124,6 +137,12 @@ export const Multipass = () => {
                   </>
                 )}
               </dl>
+            </div>
+            <div className="border-t border-gray-200 px-2 py-3 sm:px-4 flex justify-between">
+              <span>Need to generate a new API key?</span>
+              <button type="button" onClick={() => generateOwnKey()} className="ml-2 rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                Generate new key
+              </button>
             </div>
           </div>
         </>
