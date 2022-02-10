@@ -1,3 +1,4 @@
+import { withSentry } from '@sentry/nextjs';
 import { createClient } from '@supabase/supabase-js';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
@@ -34,4 +35,4 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
   });
 };
 
-export default handler;
+export default withSentry(handler);

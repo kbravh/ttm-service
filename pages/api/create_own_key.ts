@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
 import { getAdminSupabase, supabase } from '../../utils/supabase';
+import { withSentry } from '@sentry/nextjs';
 
 /**
  * This API is called whenever a user wants to generate an API key.
@@ -31,4 +32,4 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
   });
 };
 
-export default handler;
+export default withSentry(handler);

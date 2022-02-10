@@ -6,6 +6,7 @@ import { runMiddleware } from '../../utils/runMiddleware';
 import { URLSearchParams } from 'url';
 import { TweetRecord, TweetRequest, UserProfile } from '../../types/database';
 import { Tweet } from '../../types/tweet';
+import { withSentry, captureException, addBreadcrumb, Severity } from '@sentry/nextjs';
 
 const cors = Cors({
   methods: ['GET', 'POST', 'OPTIONS'],
@@ -87,7 +88,13 @@ const handler: NextApiHandler = async (req, res) => {
 
   // save tweet data
   try {
-    await adminSupabase.from<TweetRecord>('tweets').upsert(
+    addBreadcrumb({
+      category: 'api',
+      data: tweet,
+      level: Severity.Info,
+      message: `Saving tweet stats for tweet ${tweet.data.id}.`
+    })
+    const {error: tweetError} = await adminSupabase.from<TweetRecord>('tweets').upsert(
       {
         last_retrieved_at: new Date(),
         tweet_id: tweet.data.id,
@@ -98,7 +105,10 @@ const handler: NextApiHandler = async (req, res) => {
         returning: 'minimal',
       },
     );
-    await adminSupabase.from<TweetRequest>('requests').insert(
+    if (tweetError) {
+      captureException(tweetError)
+    }
+    const {error: requestError} = await adminSupabase.from<TweetRequest>('requests').insert(
       {
         tweet_id: tweet.data.id,
         user_id: user.id,
@@ -107,9 +117,12 @@ const handler: NextApiHandler = async (req, res) => {
         returning: 'minimal',
       },
     );
+    if (requestError) {
+      captureException(requestError)
+    }
   } catch (error) {
     console.error('There was an issue saving the tweet and record.');
   }
 };
 
-export default handler;
+export default withSentry(handler);

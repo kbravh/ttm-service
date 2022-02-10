@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
+import { withSentry } from '@sentry/nextjs';
 
 const adminSupabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
@@ -33,4 +34,4 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
   res.send({ key });
 };
 
-export default handler;
+export default withSentry(handler);
