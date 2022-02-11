@@ -31,18 +31,13 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(400).send('No tweet ID provided');
   }
 
-  let params: URLSearchParams;
-  try {
-    params = new URLSearchParams({
-      expansions: 'author_id,attachments.poll_ids,attachments.media_keys',
-      'user.fields': 'name,username,profile_image_url',
-      'tweet.fields': 'attachments,public_metrics,entities,conversation_id,referenced_tweets',
-      'media.fields': 'url,alt_text',
-      'poll.fields': 'options',
-    });
-  } catch (error) {
-    return res.status(400).send('Malformed request');
-  }
+  const params = new URLSearchParams({
+    expansions: 'author_id,attachments.poll_ids,attachments.media_keys',
+    'user.fields': 'name,username,profile_image_url',
+    'tweet.fields': 'attachments,public_metrics,entities,conversation_id,referenced_tweets',
+    'media.fields': 'url,alt_text',
+    'poll.fields': 'options',
+  });
 
   const twitterUrl = new URL(`https://api.twitter.com/2/tweets/${tweetId}`);
   let tweetRequest;
@@ -55,13 +50,18 @@ const handler: NextApiHandler = async (req, res) => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.request) {
-        const errors = error.response?.data?.errors;
-        if (errors?.[0]?.message.includes("The `id` query parameter value")) {
-          return res.status(400).send('The tweet Id is invalid.')
+        if (error.response?.data?.status === 401) {
+          captureException(error);
+          return res.status(500).send('There is a problem with TTM. It is being investigated.')
         }
+        const errors = error.response?.data?.errors;
+        if (errors?.[0]?.message.includes('The `id` query parameter value')) {
+          return res.status(400).send('The tweet Id is invalid.');
+        }
+        captureException(error)
         return res.status(500).send(errors?.[0]?.message);
       } else {
-        console.error(error);
+        captureException(error)
         return res.status(500).send(error.message);
       }
     }
@@ -79,7 +79,8 @@ const handler: NextApiHandler = async (req, res) => {
     switch (tweet.reason) {
       case 'client-not-enrolled':
       default:
-        return res.status(400).send("There seems to be a problem with TTM's connection to Twitter.");
+        captureException(tweet);
+        return res.status(400).send("There is a problem with TTM. It is being investigated.");
     }
   }
 
@@ -92,9 +93,9 @@ const handler: NextApiHandler = async (req, res) => {
       category: 'api',
       data: tweet,
       level: Severity.Info,
-      message: `Saving tweet stats for tweet ${tweet.data.id}.`
-    })
-    const {error: tweetError} = await adminSupabase.from<TweetRecord>('tweets').upsert(
+      message: `Saving tweet stats for tweet ${tweet.data.id}.`,
+    });
+    const { error: tweetError } = await adminSupabase.from<TweetRecord>('tweets').upsert(
       {
         last_retrieved_at: new Date(),
         tweet_id: tweet.data.id,
@@ -106,9 +107,9 @@ const handler: NextApiHandler = async (req, res) => {
       },
     );
     if (tweetError) {
-      captureException(tweetError)
+      captureException(tweetError);
     }
-    const {error: requestError} = await adminSupabase.from<TweetRequest>('requests').insert(
+    const { error: requestError } = await adminSupabase.from<TweetRequest>('requests').insert(
       {
         tweet_id: tweet.data.id,
         user_id: user.id,
@@ -118,7 +119,7 @@ const handler: NextApiHandler = async (req, res) => {
       },
     );
     if (requestError) {
-      captureException(requestError)
+      captureException(requestError);
     }
   } catch (error) {
     console.error('There was an issue saving the tweet and record.');
