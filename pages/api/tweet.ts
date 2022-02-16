@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Cors from 'cors';
+import { createLogger } from '@logdna/logger';
 import { getAdminSupabase } from '../../utils/supabase';
 import { NextApiHandler } from 'next';
 import { runMiddleware } from '../../utils/runMiddleware';
@@ -13,21 +14,51 @@ const cors = Cors({
 });
 
 const handler: NextApiHandler = async (req, res) => {
+  const logger = createLogger(process.env.LOGDNA_INGESTION_KEY ?? '', {
+    tags: ['tweet-endpoint'],
+    app: 'ttm-service',
+    env: process.env.NODE_ENV,
+    meta: {
+      request: {
+        query: req.query,
+        headers: req.rawHeaders,
+        url: req.url,
+      },
+    },
+  });
+
   await runMiddleware(req, res, cors);
+
   const apiKey = req.headers.authorization?.split('Bearer ')?.[1] ?? '';
   if (!apiKey) {
+    logger.info?.({
+      message: 'Request made without API key'
+    });
     return res.status(401).send('Unauthorized');
   }
+
+  logger.info?.({
+    message: 'Request in progress',
+    apiKey,
+  });
 
   const adminSupabase = getAdminSupabase();
 
   const { data: user } = await adminSupabase.from<UserProfile>('users').select('id').eq('key', apiKey).single();
 
   if (!user) {
+    logger.info?.({
+      message: 'Request made with invalid API key',
+      apiKey,
+    });
     return res.status(401).send('Invalid API key');
   }
   const tweetId = req.query.tweet ?? '';
   if (!tweetId) {
+    logger.info?.({
+      message: 'Request made without tweet ID',
+      apiKey,
+    });
     return res.status(400).send('No tweet ID provided');
   }
 
@@ -41,6 +72,10 @@ const handler: NextApiHandler = async (req, res) => {
 
   const twitterUrl = new URL(`https://api.twitter.com/2/tweets/${tweetId}`);
   let tweetRequest;
+  logger.info?.({
+    message: 'Tweet request being made',
+    url: twitterUrl,
+  });
   try {
     tweetRequest = await axios.get(`${twitterUrl.href}?${params.toString()}`, {
       headers: {
@@ -52,16 +87,16 @@ const handler: NextApiHandler = async (req, res) => {
       if (error.request) {
         if (error.response?.data?.status === 401) {
           captureException(error);
-          return res.status(500).send('There is a problem with TTM. It is being investigated.')
+          return res.status(500).send('There is a problem with TTM. It is being investigated.');
         }
         const errors = error.response?.data?.errors;
         if (errors?.[0]?.message.includes('The `id` query parameter value')) {
           return res.status(400).send('The tweet Id is invalid.');
         }
-        captureException(error)
+        captureException(error);
         return res.status(500).send(errors?.[0]?.message);
       } else {
-        captureException(error)
+        captureException(error);
         return res.status(500).send(error.message);
       }
     }
@@ -80,13 +115,17 @@ const handler: NextApiHandler = async (req, res) => {
       case 'client-not-enrolled':
       default:
         captureException(tweet);
-        return res.status(400).send("There is a problem with TTM. It is being investigated.");
+        return res.status(400).send('There is a problem with TTM. It is being investigated.');
     }
   }
 
   // send the tweet back to the user
   res.send(tweet);
 
+  logger.info?.({
+    message: 'Tweet returned to user, logging tweet in database',
+    tweet,
+  });
   // save tweet data
   try {
     addBreadcrumb({
@@ -95,7 +134,7 @@ const handler: NextApiHandler = async (req, res) => {
       level: Severity.Info,
       message: `Saving tweet stats for tweet ${tweet.data.id}.`,
     });
-    const { error: tweetError } = await adminSupabase.from<TweetRecord>('tweets').upsert(
+    const { data: tweetData, error: tweetError } = await adminSupabase.from<TweetRecord>('tweets').upsert(
       {
         last_retrieved_at: new Date(),
         tweet_id: tweet.data.id,
@@ -103,23 +142,27 @@ const handler: NextApiHandler = async (req, res) => {
       },
       {
         onConflict: 'tweet_id',
-        returning: 'minimal',
       },
     );
     if (tweetError) {
       captureException(tweetError);
+    } else {
+      logger.info?.({
+        message: 'Tweet saved to database',
+        tweetData,
+      });
     }
-    const { error: requestError } = await adminSupabase.from<TweetRequest>('requests').insert(
-      {
-        tweet_id: tweet.data.id,
-        user_id: user.id,
-      },
-      {
-        returning: 'minimal',
-      },
-    );
+    const { data: requestData, error: requestError } = await adminSupabase.from<TweetRequest>('requests').insert({
+      tweet_id: tweet.data.id,
+      user_id: user.id,
+    });
     if (requestError) {
       captureException(requestError);
+    } else {
+      logger.info?.({
+        message: 'Request saved to database',
+        requestData,
+      });
     }
   } catch (error) {
     console.error('There was an issue saving the tweet and record.');
