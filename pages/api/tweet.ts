@@ -53,7 +53,7 @@ const handler: NextApiHandler = async (req, res) => {
     });
     return res.status(401).send('Invalid API key');
   }
-  const tweetId = req.query.tweet ?? '';
+  const tweetId = (Array.isArray(req.query.tweet) ? req.query.tweet[0] : req.query.tweet) ?? '';
   if (!tweetId) {
     logger.info?.({
       message: 'Request made without tweet ID',
@@ -139,6 +139,7 @@ const handler: NextApiHandler = async (req, res) => {
         last_retrieved_at: new Date(),
         tweet_id: tweet.data.id,
         author_id: tweet.data.author_id,
+        conversation_id: tweet.data.conversation_id
       },
       {
         onConflict: 'tweet_id',
@@ -152,9 +153,12 @@ const handler: NextApiHandler = async (req, res) => {
         tweetData,
       });
     }
+    const source = (Array.isArray(req.query.source) ? req.query.source[0] : req.query.source) || undefined;
     const { data: requestData, error: requestError } = await adminSupabase.from<TweetRequest>('requests').insert({
       tweet_id: tweet.data.id,
       user_id: user.id,
+      conversation_id: tweet.data.conversation_id,
+      source
     });
     if (requestError) {
       captureException(requestError);
