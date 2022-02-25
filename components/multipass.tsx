@@ -37,9 +37,9 @@ export const Multipass = () => {
   const copyKeyToClipboard = async () => {
     await navigator.clipboard.writeText(user?.key ?? '');
     if (copyButtonRef.current) {
-      copyButtonRef.current.innerText = 'Copied!'
-      await wait(3000)
-      copyButtonRef.current.innerText = 'Copy key'
+      copyButtonRef.current.innerText = 'Copied!';
+      await wait(3000);
+      copyButtonRef.current.innerText = 'Copy key';
     }
   };
 
@@ -108,7 +108,12 @@ export const Multipass = () => {
                         <span className="flex flex-grow items-center">{user?.key ?? 'No key'}</span>
                         {user?.key && (
                           <span className="sm:ml-4">
-                            <button type="button" onClick={() => copyKeyToClipboard()} ref={copyButtonRef} className="ml-2 rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                            <button
+                              type="button"
+                              onClick={() => copyKeyToClipboard()}
+                              ref={copyButtonRef}
+                              className="ml-2 rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                            >
                               Copy key
                             </button>
                           </span>
@@ -133,12 +138,15 @@ export const Multipass = () => {
                         </span>
                         <span>Resets each month</span>
                       </dd>
+                      <dd className="mt-3 text-sm text-gray-700 sm:col-span-3 flex justify-center">
+                        <span>Need more tweets? Subscriptions coming soon.</span>
+                      </dd>
                     </div>
                   </>
                 )}
               </dl>
             </div>
-            <div className="border-t border-gray-200 px-2 py-3 sm:px-4 flex justify-between">
+            <div className="border-t border-gray-200 px-2 py-3 sm:px-4 flex justify-between text-sm">
               <span>Need to generate a new API key?</span>
               <button type="button" onClick={() => generateOwnKey()} className="ml-2 rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                 Generate new key

@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "http://ttm.kbravh.dev/*"
+  to = "https://ttm.kbravh.dev/:splat"
+  status = 301
+  force = true

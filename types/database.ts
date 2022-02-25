@@ -25,6 +25,7 @@ export interface TweetRecord {
   last_retrieved_at: Date | string
   author_id: string
   tweet_id: string
+  conversation_id?: string
 }
 
 export interface TweetRequest {
@@ -32,4 +33,6 @@ export interface TweetRequest {
   created_at: string
   user_id: string
   tweet_id: string
+  conversation_id?: string
+  source?: string
 }
