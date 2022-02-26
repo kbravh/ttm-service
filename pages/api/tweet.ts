@@ -44,7 +44,12 @@ const handler: NextApiHandler = async (req, res) => {
 
   const adminSupabase = getAdminSupabase();
 
-  const { data: user } = await adminSupabase.from<UserProfile>('users').select('id').eq('key', apiKey).single();
+  const { data: user } = await adminSupabase.from<UserProfile>('users').select('id,subscriptions:subscription_id (*)').eq('key', apiKey).single();
+
+  const {data: usage} = await adminSupabase.rpc<number>('monthly_usage', { user_ident: user?.id });
+
+  const used = (Array.isArray(usage) ? usage[0] : usage);
+  const limit = user?.subscriptions?.limit ?? 0;
 
   if (!user) {
     logger.info?.({
@@ -53,7 +58,17 @@ const handler: NextApiHandler = async (req, res) => {
     });
     return res.status(401).send('Invalid API key');
   }
+
+  if (used === null) {
+    return res.status(400).send('Subscription information not found');
+  }
+
+  if (used >= limit) {
+    return res.status(402).send(`Usage limit has been met for this month: ${used}/${limit}`)
+  }
+
   const tweetId = (Array.isArray(req.query.tweet) ? req.query.tweet[0] : req.query.tweet) ?? '';
+
   if (!tweetId) {
     logger.info?.({
       message: 'Request made without tweet ID',
