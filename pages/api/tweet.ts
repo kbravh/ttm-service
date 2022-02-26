@@ -64,7 +64,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (used >= limit) {
-    return res.status(402).send(`Usage limit has been met for this month: ${used}/${limit}`)
+    return res.status(402).send(`Usage limit has been met: ${used}/${limit}`)
   }
 
   const tweetId = (Array.isArray(req.query.tweet) ? req.query.tweet[0] : req.query.tweet) ?? '';
