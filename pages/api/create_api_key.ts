@@ -1,13 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
 import { withSentry } from '@sentry/nextjs';
+import { getAdminSupabase } from '../../utils/supabase';
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
-  process.env.PRIVATE_SUPABASE_KEY ?? ''
-)
+const adminSupabase = getAdminSupabase()
 
 /**
  * This API is called as a function hook any time a new user record is created.

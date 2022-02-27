@@ -1,9 +1,9 @@
 import { withSentry } from '@sentry/nextjs';
-import { createClient } from '@supabase/supabase-js';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
+import { getAdminSupabase } from '../../utils/supabase';
 
-const adminSupabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '', process.env.PRIVATE_SUPABASE_KEY ?? '');
+const adminSupabase = getAdminSupabase();
 
 const handler: NextApiHandler = async (req, res): Promise<void> => {
   let userId = '';

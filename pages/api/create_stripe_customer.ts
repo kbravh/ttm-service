@@ -2,14 +2,14 @@ import { createLogger } from '@logdna/logger';
 import { NextApiHandler } from 'next';
 import Stripe from 'stripe';
 import { withSentry, captureException, addBreadcrumb, Severity } from '@sentry/nextjs';
-import { createClient } from '@supabase/supabase-js';
 import { UserProfile } from '../../types/database';
+import { getAdminSupabase } from '../../utils/supabase';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
   apiVersion: '2020-08-27',
 });
 
-const adminSupabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '', process.env.PRIVATE_SUPABASE_KEY ?? '');
+const adminSupabase = getAdminSupabase();
 
 const handler: NextApiHandler = async (req, res) => {
   const logger = createLogger(process.env.LOGDNA_INGESTION_KEY ?? '', {
@@ -44,7 +44,8 @@ const handler: NextApiHandler = async (req, res) => {
     .update({
       stripe_customer_id: customer.id,
     })
-    .eq('id', req.body.record.id);
+    .eq('id', req.body.record.id)
+    .single();
 
   if (error) {
     logger.error?.(`There was an error updating the user\'s Stripe id: ${error.message}`);

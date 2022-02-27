@@ -1,14 +1,15 @@
 import { nanoid } from 'nanoid';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
-import { getAdminSupabase, supabase } from '../../utils/supabase';
+import { getAdminSupabase } from '../../utils/supabase';
 import { withSentry } from '@sentry/nextjs';
 
+const adminSupabase = getAdminSupabase()
 /**
  * This API is called whenever a user wants to generate an API key.
  */
 const handler: NextApiHandler = async (req, res): Promise<void> => {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const { user } = await adminSupabase.auth.api.getUserByCookie(req);
 
   if (!user) {
     return res.status(401).send('Unauthorized');
@@ -16,7 +17,6 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
 
   const key = 'TTM>' + nanoid(15);
 
-  const adminSupabase = getAdminSupabase()
 
   const { data: updatedUser } = await adminSupabase
     .from<UserProfile>('users')
