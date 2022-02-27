@@ -10,6 +10,7 @@ export interface UserProfile extends User {
   subscription_end?: Date | string
   // proto property, inserted by join
   subscriptions?: Subscription
+  stripe_customer_id?: string
 }
 
 export interface Subscription {

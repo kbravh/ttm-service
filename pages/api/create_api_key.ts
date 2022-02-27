@@ -18,7 +18,7 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
   }
 
   if (!req.body?.record?.id) {
-    return res.status(404).send('This resource must be triggered with a user record');
+    return res.status(400).send('This resource must be triggered with a user record');
   }
 
   const key = 'TTM>' + nanoid(15);
