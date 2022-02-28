@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useUser } from '../context/user'
-import { getFirstAndLastDayOfMonth } from '../utils/dates'
+import { getFirstAndLastDayOfMonth, isDateBetween } from '../utils/dates'
 import { Subscription, UserProfile } from '../types/database'
 import { useEffect, useRef, useState } from 'react'
 import { KeyIcon } from '@heroicons/react/outline'
@@ -76,6 +76,26 @@ export const Multipass = () => {
     }
     fetchUsage()
   }, [userState])
+
+  useEffect(() => {
+    if (userState === 'full') {
+      const [firstDay, lastDay] = getFirstAndLastDayOfMonth()
+      const subscription = supabase
+        .from<TweetRequest>(`requests:user_id=eq.${user?.id}`)
+        .on('INSERT', (payload) => {
+          if (isDateBetween(new Date(payload.new.created_at), firstDay, lastDay)) {
+            setUsage((prevUsage) => ({
+              limit: prevUsage?.limit,
+              used: (prevUsage?.used ?? 0) + 1,
+            }))
+          }
+        })
+        .subscribe()
+      return () => {
+        supabase.removeSubscription(subscription)
+      }
+    }
+  }, [userState, user])
 
   const copyKeyToClipboard = async () => {
     await navigator.clipboard.writeText(user?.key ?? '')
