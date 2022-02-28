@@ -1,15 +1,18 @@
-import { useUser } from '../context/user';
 import axios from 'axios';
+import { useUser } from '../context/user';
+import { getFirstAndLastDayOfMonth } from '../utils/dates';
 import { UserProfile } from '../types/database';
 import { useEffect, useRef, useState } from 'react';
 import { KeyIcon } from '@heroicons/react/outline';
+import { TweetRequest } from '../types/database';
 import { wait } from '../utils/timers';
+import { supabase } from '../utils/supabase';
 
 type keyState = 'ready' | 'loading' | 'error';
 
 interface Usage {
   used: number;
-  limit: number;
+  limit?: number;
 }
 
 export const Multipass = () => {
@@ -30,6 +33,18 @@ export const Multipass = () => {
           setUsage(usage);
         }
       }
+    };
+    fetchUsage();
+  }, [userState]);
+
+  useEffect(() => {
+    const fetchUsage = async () => {
+      const [firstDay, lastDay] = getFirstAndLastDayOfMonth();
+      const { count, error: usageError } = await supabase
+        .from<TweetRequest>('requests')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', firstDay.toISOString())
+        .lte('created_at', lastDay.toISOString());
     };
     fetchUsage();
   }, [userState]);
