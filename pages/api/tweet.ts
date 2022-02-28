@@ -46,10 +46,9 @@ const handler: NextApiHandler = async (req, res) => {
 
   const { data: user } = await adminSupabase.from<UserProfile>('users').select('id,subscriptions:subscription_id (*)').eq('key', apiKey).single();
 
-  const {data: usage} = await adminSupabase.rpc<number>('monthly_usage', { user_ident: user?.id });
+  const {data: used} = await adminSupabase.rpc<number>('monthly_usage', { user_ident: user?.id }).single();
 
-  const used = (Array.isArray(usage) ? usage[0] : usage);
-  const limit = user?.subscriptions?.limit ?? 0;
+  const limit = user?.subscriptions?.limit;
 
   if (!user) {
     logger.info?.({
@@ -63,7 +62,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(400).send('Subscription information not found');
   }
 
-  if (used >= limit) {
+  if (limit !== undefined && used >= limit) {
     return res.status(402).send(`Usage limit has been met: ${used}/${limit}`)
   }
 
