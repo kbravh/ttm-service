@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUser } from '../context/user'
 import { getFirstAndLastDayOfMonth } from '../utils/dates'
-import { UserProfile } from '../types/database'
+import { Subscription, UserProfile } from '../types/database'
 import { useEffect, useRef, useState } from 'react'
 import { KeyIcon } from '@heroicons/react/outline'
 import { TweetRequest } from '../types/database'
@@ -28,28 +28,50 @@ export const Multipass = () => {
   useEffect(() => {
     const fetchUsage = async () => {
       if (userState === 'full') {
-        const usage = await axios
-          .get<Usage>('/api/usage')
-          .then((response) => response.data)
-        if (usage) {
-          setUsage(usage)
-        }
-      }
-    }
-    fetchUsage()
-  }, [userState])
-
-  useEffect(() => {
-    const fetchUsage = async () => {
-      if (userState === 'full') {
         const [firstDay, lastDay] = getFirstAndLastDayOfMonth()
-        const { count, error: usageError } = await supabase
+        const usageRequest = supabase
           .from<TweetRequest>('requests')
           .select('*', { count: 'exact', head: true })
           .gte('created_at', firstDay.toISOString())
           .lte('created_at', lastDay.toISOString())
 
-        console.log('usage', count, usageError)
+        const subscriptionRequest = supabase
+          .from<Subscription>('subscriptions')
+          .select('limit')
+          .single()
+
+        const [
+          { count, error: usageError },
+          { data: subscription, error: subscriptionError },
+        ] = await Promise.all([usageRequest, subscriptionRequest])
+
+        if (usageError || subscriptionError) {
+          if (usageError) {
+            console.error(
+              'There was an error fetching the number of tweets used',
+              usageError
+            )
+          }
+          if (subscriptionError) {
+            console.error(
+              'There was an error fetching the subscription information',
+              subscriptionError
+            )
+          }
+          return
+        }
+
+        if (count === null) {
+          console.error(
+            'There was an error retrieving an accurate tweet count.'
+          )
+          return
+        }
+
+        setUsage({
+          used: count,
+          limit: subscription?.limit,
+        })
       }
     }
     fetchUsage()
