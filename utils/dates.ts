@@ -5,9 +5,9 @@
  */
 export const getFirstAndLastDayOfMonth = (): Date[] => {
   const date = new Date()
-  const firstDay = new Date(Date.UTC(date.getFullYear(), date.getUTCMonth(), 1))
+  const firstDay = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1))
   const lastDay = new Date(
-    Date.UTC(date.getFullYear(), date.getUTCMonth() + 1, 0, 23, 59, 59, 999)
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0, 23, 59, 59, 999)
   )
   return [firstDay, lastDay]
 }
