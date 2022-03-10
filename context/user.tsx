@@ -63,7 +63,7 @@ const Provider: React.FC = ({ children }) => {
 
   const login = async (credentials: UserCredentials) => {
     await supabase.auth.signIn(credentials, {
-      redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/account`,
     });
   };
 
