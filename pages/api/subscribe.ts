@@ -40,26 +40,47 @@ const handler: NextApiHandler = async (req, res) => {
     stripe_customer_id = ''
   }
 
-  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [{
-    price: priceId
-  }]
-
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
     apiVersion: '2020-08-27',
   })
 
-  const session = await stripe.checkout.sessions.create({
-    customer: stripe_customer_id,
-    mode: 'payment',
-    line_items: lineItems,
-    payment_method_types: ['card'],
-    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/cancel`,
-    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/success`,
-  })
+  try {
+    const subscription = await stripe.subscriptions.create({
+      customer: stripe_customer_id,
+      items: [{
+        price: priceId,
+      }],
+      payment_behavior: 'default_incomplete',
+      expand: ['latest_invoice.payment_intent'],
+    })
 
-  return res.send({
-    id: session.id,
-  })
+    let latestInvoice = subscription?.latest_invoice;
+    if (!latestInvoice){
+      throw new Error('Latest invoice not found')
+    }
+
+    if (typeof latestInvoice === 'string') {
+      latestInvoice = await stripe.invoices.retrieve(latestInvoice)
+    }
+
+    let paymentIntent = latestInvoice.payment_intent;
+    if (!paymentIntent) {
+      throw new Error('Payment intent not found')
+    }
+
+    if (typeof paymentIntent === 'string') {
+      paymentIntent = await stripe.paymentIntents.retrieve(paymentIntent)
+    }
+
+    res.send({
+      subscriptionId: subscription.id,
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).send({ error: { message: error.message } });
+    }
+  }
 }
 
 export default handler
