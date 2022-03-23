@@ -14,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const priceId = req.body.id
   if (!priceId) {
-    return res.status(400).send('Product id not included')
+    return res.status(400).send('Price id not included')
   }
 
   const { data, error } = await adminSupabase
@@ -44,43 +44,17 @@ const handler: NextApiHandler = async (req, res) => {
     apiVersion: '2020-08-27',
   })
 
-  try {
-    const subscription = await stripe.subscriptions.create({
-      customer: stripe_customer_id,
-      items: [{
-        price: priceId,
-      }],
-      payment_behavior: 'default_incomplete',
-      expand: ['latest_invoice.payment_intent'],
-    })
+  const session = await stripe.checkout.sessions.create({
+    billing_address_collection: 'auto',
+    line_items: [{
+      price: priceId,
+    }],
+    mode: 'subscription',
+    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`
+  })
 
-    let latestInvoice = subscription?.latest_invoice;
-    if (!latestInvoice){
-      throw new Error('Latest invoice not found')
-    }
-
-    if (typeof latestInvoice === 'string') {
-      latestInvoice = await stripe.invoices.retrieve(latestInvoice)
-    }
-
-    let paymentIntent = latestInvoice.payment_intent;
-    if (!paymentIntent) {
-      throw new Error('Payment intent not found')
-    }
-
-    if (typeof paymentIntent === 'string') {
-      paymentIntent = await stripe.paymentIntents.retrieve(paymentIntent)
-    }
-
-    res.send({
-      subscriptionId: subscription.id,
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(400).send({ error: { message: error.message } });
-    }
-  }
+  res.send({id: session.id})
 }
 
 export default handler

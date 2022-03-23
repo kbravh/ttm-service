@@ -31,7 +31,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
     }
 
     const {id} = subscriptionResponse?.data as {id: string}
-    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY ?? '')
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? '')
     await stripe?.redirectToCheckout({sessionId: id})
   }
 
@@ -56,8 +56,6 @@ export const getStaticProps = async () => {
 
   const price = await stripe.prices.retrieve(process.env.STRIPE_PRICE_KEY ?? '')
   const product = await stripe.products.retrieve(price.product.toString())
-
-  console.log(price)
 
   const tiers =
     price?.tiers?.map(({ unit_amount, up_to }) => ({
