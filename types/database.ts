@@ -17,7 +17,9 @@ export interface Subscription {
   id: string
   created_at: Date | string
   price: number
-  limit: number
+  limit: number | null
+  stripe_price_id: string
+  description: string
 }
 
 export interface TweetRecord {
