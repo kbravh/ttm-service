@@ -8,6 +8,7 @@ import { URLSearchParams } from 'url';
 import { TweetRecord, TweetRequest, UserProfile } from '../../types/database';
 import { Tweet } from '../../types/tweet';
 import { withSentry, captureException, addBreadcrumb, Severity } from '@sentry/nextjs';
+import Stripe from 'stripe';
 
 const cors = Cors({
   methods: ['GET', 'POST', 'OPTIONS'],
@@ -62,7 +63,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(400).send('Subscription information not found');
   }
 
-  if (limit !== undefined && used >= limit) {
+  if (limit !== undefined && limit !== null && used >= limit) {
     return res.status(402).send(`Usage limit has been met: ${used}/${limit}`)
   }
 
@@ -184,6 +185,17 @@ const handler: NextApiHandler = async (req, res) => {
     }
   } catch (error) {
     console.error('There was an issue saving the tweet and record.');
+  }
+
+
+  if (user.subscription_id !== process.env.FREE_TIER_PLAN_ID) {
+    logger.info?.({
+      message: 'Reporting usage to Stripe'
+    })
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
+      apiVersion: '2020-08-27'
+    })
+    await stripe.subscriptionItems.createUsageRecord(user.subscription_item_id ?? '', {quantity: 1})
   }
 };
 
