@@ -35,28 +35,40 @@ const handler: NextApiHandler = async (req, res) => {
 
   let { stripe_customer_id } = data
 
-  if (!stripe_customer_id) {
-    //create stripe customer
-    stripe_customer_id = ''
-  }
-
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
     apiVersion: '2020-08-27',
   })
 
+  if (!stripe_customer_id) {
+    const customer: Stripe.Customer = await stripe.customers.create({
+      email: req.body.record.email,
+    })
+    stripe_customer_id = customer.id
+
+    const { data, error } = await adminSupabase
+      .from<UserProfile>('users')
+      .update({
+        stripe_customer_id,
+      })
+      .eq('id', req.body.record.id)
+      .single()
+  }
+
   const session = await stripe.checkout.sessions.create({
     billing_address_collection: 'auto',
-    line_items: [{
-      price: priceId,
-    }],
+    line_items: [
+      {
+        price: priceId,
+      },
+    ],
     mode: 'subscription',
     success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
-    automatic_tax: {enabled: true},
-    customer_email: data.email
+    automatic_tax: { enabled: true },
+    customer: stripe_customer_id,
   })
 
-  res.send({id: session.id})
+  res.send({ id: session.id })
 }
 
 export default handler
