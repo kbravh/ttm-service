@@ -54,7 +54,8 @@ const handler: NextApiHandler = async (req, res) => {
       {
         // fetch the subscription record with the matching stripe price id
         const subscription = event.data.object as Stripe.Subscription
-        const priceId = subscription.items.data[0].price.id
+        const subscriptionItem = subscription.items.data[0]
+        const priceId = subscriptionItem.price.id
         const { data: subscriptionRecord, error: subscriptionError } =
           await supabase
             .from<Subscription>('subscriptions')
@@ -65,11 +66,12 @@ const handler: NextApiHandler = async (req, res) => {
           console.log(`unable to find a subscription record with the price id ${priceId}.`, subscriptionError)
           return res.status(400).send({received: true, error: 'Unable to find subscription with that price ID'})
         }
-        // set the user's subscription to this record
+        // set the user's subscription to this record and store subscription item
         const { data, error } = await supabase
           .from<UserProfile>('users')
           .update({
             subscription_id: subscriptionRecord?.id,
+            subscription_item_id: subscriptionItem.id
           }).eq('stripe_customer_id', customerId)
         if (error || !data) {
           console.log(`Unable to find a user with stripe customer ID ${customerId}`)
