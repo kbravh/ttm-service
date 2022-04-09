@@ -66,6 +66,9 @@ const handler: NextApiHandler = async (req, res) => {
     cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
     automatic_tax: { enabled: true },
     customer: stripe_customer_id,
+    customer_update: {
+      address: 'auto'
+    }
   })
 
   res.send({ id: session.id })
