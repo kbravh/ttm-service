@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useUser } from '../context/user'
-import { getFirstAndLastDayOfMonth, isDateBetween } from '../utils/dates'
+import { getFirstAndLastMomentOfMonth, isDateBetween } from '../utils/dates'
 import { Subscription, UserProfile } from '../types/database'
 import { useEffect, useRef, useState } from 'react'
 import { KeyIcon } from '@heroicons/react/outline'
@@ -28,7 +28,7 @@ export const Multipass = () => {
   useEffect(() => {
     const fetchUsage = async () => {
       if (userState === 'full') {
-        const [firstDay, lastDay] = getFirstAndLastDayOfMonth()
+        const [firstDay, lastDay] = getFirstAndLastMomentOfMonth()
         const usageRequest = supabase
           .from<TweetRequest>('requests')
           .select('*', { count: 'exact', head: true })
@@ -79,7 +79,7 @@ export const Multipass = () => {
 
   useEffect(() => {
     if (userState === 'full') {
-      const [firstDay, lastDay] = getFirstAndLastDayOfMonth()
+      const [firstDay, lastDay] = getFirstAndLastMomentOfMonth()
       const subscription = supabase
         .from<TweetRequest>(`requests:user_id=eq.${user?.id}`)
         .on('INSERT', (payload) => {

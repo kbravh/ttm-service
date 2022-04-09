@@ -1,10 +1,11 @@
 /**
  * Returns two date objects set to the first millisecond
- * and the last millisecond of the current month in UTC.
+ * and the last millisecond of the current month in UTC,
+ * or to the date provided as a parameter.
  * @returns Date objects of first moment and last moment of current month in UTC
  */
-export const getFirstAndLastDayOfMonth = (): Date[] => {
-  const date = new Date()
+export const getFirstAndLastMomentOfMonth = (date?: Date): Date[] => {
+  date = date ?? new Date()
   const firstDay = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1))
   const lastDay = new Date(
     Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0, 23, 59, 59, 999)
