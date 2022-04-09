@@ -29,13 +29,20 @@ calculatePrice(tiers, usage)
 
 */
 
+export const defaultPriceTiers = [
+  [200, 0.000],
+  [300, 0.005],
+  [500, 0.004],
+  [Infinity, 0.003]
+]
+
 export const calculatePrice = (
   priceTiers: number[][],
   tweets: number
 ): number =>
   priceTiers.reduce((totalCost, priceTier): number => {
     const [limit, price] = priceTier
-    const usage = limit === Infinity ? tweets : Math.min(limit, tweets)
+    const usage = Math.min(limit, tweets)
     tweets -= usage
     return (totalCost += usage * price)
   }, 0)
