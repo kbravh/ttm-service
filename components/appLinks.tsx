@@ -4,8 +4,8 @@ export const AppLinks = () => {
   return (
     <div className="flex flex-col sm:flex-row justify-around items-center gap-7 sm:gap-20 select-none">
       <div className="relative group">
-        <div className="absolute inset-0 rounded-full blur bg-gradient-to-tr from-emerald-400 to-indigo-500 opacity-75 transition group-hover:opacity-100 group-hover:scale-105 group-hover:duration-200 duration-1000"></div>
-        <a href="https://github.com/kbravh/obsidian-tweet-to-markdown" className="relative block px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold">
+        <div className="absolute h-9 inset-0 rounded-full blur bg-gradient-to-tr from-emerald-400 to-indigo-500 opacity-75 transition group-hover:opacity-100 group-hover:scale-105 group-hover:duration-200 duration-1000"></div>
+        <a href="https://github.com/kbravh/obsidian-tweet-to-markdown" className="relative block px-5 py-[9px] rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold">
           <span className="flex items-center space-x-2">
             <svg width="15px" height="15px" viewBox="0 0 20 20" className='text-slate-100' stroke='currentColor' fill='currentColor'>
               <path strokeWidth={.0724371}
