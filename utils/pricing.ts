@@ -46,3 +46,29 @@ export const calculatePrice = (
     tweets -= usage
     return (totalCost += usage * price)
   }, 0)
+
+  type CostWithBreakdown = {
+    cost: number
+    breakdown: UsageCost[]
+  }
+  type UsageCost = {
+    usage: number
+    price: number
+  }
+  export const calculatePriceWithBreakdown = (
+  priceTiers: number[][],
+  tweets: number
+): CostWithBreakdown => {
+  const breakdown: UsageCost[] = []
+  const cost = priceTiers.reduce((totalCost, priceTier): number => {
+    const [limit, price] = priceTier
+    const usage = Math.min(limit, tweets)
+    tweets -= usage
+    if(usage) {
+      breakdown.push({usage, price})
+    }
+    return (totalCost += usage * price)
+  }, 0)
+  return {cost, breakdown}
+}
+
