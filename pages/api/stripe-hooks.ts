@@ -93,7 +93,7 @@ const handler: NextApiHandler = async (req, res) => {
         const { data, error } = await supabase
           .from<UserProfile>('users')
           .update({
-            subscription_id: process.env.FREE_TIER_PLAN_ID,
+            subscription_id: process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID,
           })
           .eq('stripe_customer_id', customerId)
           if (error || !data) {

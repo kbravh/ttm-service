@@ -1,6 +1,6 @@
 import { loadStripe } from '@stripe/stripe-js'
 import axios from 'axios'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import Stripe from 'stripe'
 import { Layout } from '../components/layout'
 import { MainWrapper } from '../components/mainWrapper'
@@ -8,6 +8,9 @@ import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { PriceEstimate } from '../components/priceEstimate'
 import { AnimatePresence, motion } from 'framer-motion'
+import { supabase } from '../utils/supabase'
+import { UserProfile } from '../types/database'
+import Link from 'next/link'
 interface Props {
   plan: {
     id: string
@@ -15,10 +18,13 @@ interface Props {
     description: string
     tiers: { unit_amount: number; up_to: number }[]
   }
+  user: UserProfile | null
 }
 
-const Pricing: NextPage<Props> = ({ plan }) => {
+const Pricing: NextPage<Props> = ({ plan, user }) => {
   const [isEstimatorOpen, setIsEstimatorOpen] = useState(false)
+  const [isSwitchbackOpen, setIsSwitchbackOpen] = useState(false)
+
   const handleClick = async () => {
     let subscriptionResponse
     try {
@@ -49,9 +55,35 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               <div className="text-slate-400 tex-sm">
                 The easiest way to get started
               </div>
-              <button className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3">
-                Sign up
-              </button>
+              {!user && (
+                <div className="my-5">
+                  <Link href="/login">
+                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold">
+                      Sign up
+                    </a>
+                  </Link>
+                </div>
+              )}
+              {user && (
+                <>
+                  {user.subscription_item_id ===
+                  process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
+                    <button
+                      disabled
+                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                    >
+                      You&apos;re in!
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsSwitchbackOpen(true)}
+                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                    >
+                      Switch back?
+                    </button>
+                  )}
+                </>
+              )}
             </div>
             <ul className="pt-2">
               <li>200 tweets a month</li>
@@ -66,12 +98,35 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               <div className="text-slate-400 tex-sm">
                 Take it to the next level
               </div>
-              <button
-                onClick={handleClick}
-                className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
-              >
-                Subscribe
-              </button>
+              {user && (
+                <>
+                  {user.subscription_item_id ===
+                  process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
+                    <button
+                      onClick={handleClick}
+                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                    >
+                      Subscribe
+                    </button>
+                  ) : (
+                    <button
+                      disabled
+                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                    >
+                      You&apos;re in!
+                    </button>
+                  )}
+                </>
+              )}
+              {!user && (
+                <div className="my-5">
+                  <Link href="/login?redirect=pricing" scroll={false}>
+                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold">
+                      Sign up to subscribe
+                    </a>
+                  </Link>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 pt-2">
               <p className="col-span-2 py-3">
@@ -122,7 +177,8 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                   </Dialog.Title>
                   <Dialog.Description>
                     <p>
-                      Here&apos;s an estimate of the cost by number of downloaded tweets.
+                      Here&apos;s an estimate of the cost by number of
+                      downloaded tweets.
                     </p>
                   </Dialog.Description>
                   <PriceEstimate />
@@ -137,12 +193,48 @@ const Pricing: NextPage<Props> = ({ plan }) => {
             </Dialog>
           )}
         </AnimatePresence>
+
+        <AnimatePresence>
+          {isSwitchbackOpen && (
+            <Dialog
+              open={isSwitchbackOpen}
+              onClose={() => setIsSwitchbackOpen(false)}
+              className="fixed z-10 inset-0 overflow-y-auto"
+              static
+              as={motion.div}
+            >
+              <div className="flex items-center justify-center min-h-screen">
+                <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+                <div className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center">
+                  <Dialog.Title className="font-header text-3xl text-slate-800">
+                    Switch to free tier
+                  </Dialog.Title>
+                  <Dialog.Description>
+                    <p>
+                      If you&apos;d like to switch back to free tier and cancel
+                      your subscription, please visit your account page and
+                      click &quot;Manage my subscription&quot;.
+                    </p>
+                  </Dialog.Description>
+                  <Link href="/account">
+                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3">
+                      My account
+                    </a>
+                  </Link>
+                </div>
+              </div>
+            </Dialog>
+          )}
+        </AnimatePresence>
       </MainWrapper>
     </Layout>
   )
 }
 
-export const getStaticProps = async () => {
+export default Pricing
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req)
+
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
     apiVersion: '2020-08-27',
   })
@@ -164,8 +256,7 @@ export const getStaticProps = async () => {
         description: product.description,
         tiers,
       },
+      user,
     },
   }
 }
-
-export default Pricing

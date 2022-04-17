@@ -188,7 +188,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
 
-  if (user.subscription_id !== process.env.FREE_TIER_PLAN_ID) {
+  if (user.subscription_id !== process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID) {
     logger.info?.({
       message: 'Reporting usage to Stripe'
     })
