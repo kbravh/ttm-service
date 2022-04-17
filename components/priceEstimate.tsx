@@ -38,22 +38,24 @@ export const PriceEstimate = () => {
           })}
         </div>
       </div>
-      <input
-        type="number"
-        value={usage}
-        min={0}
-        onChange={(e) => setUsage(+e.target.value)}
-        className="caret-emerald-400 focus:outline-none focus:ring focus:ring-emerald-400 rounded-md shadow-sm mb-4"
-      />
-      <input
-        type="range"
-        value={usage}
-        min={0}
-        max={3000}
-        step={50}
-        onChange={(e) => setUsage(+e.target.value)}
-        className="accent-slate-700 focus:accent-emerald-400"
-      />
+      <div className='flex flex-col items-center'>
+        <input
+          type="number"
+          value={usage}
+          min={0}
+          onChange={(e) => setUsage(+e.target.value)}
+          className="caret-emerald-400 focus:outline-none focus:ring focus:ring-emerald-400 rounded-md shadow-sm mb-4"
+        />
+        <input
+          type="range"
+          value={usage}
+          min={0}
+          max={3000}
+          step={50}
+          onChange={(e) => setUsage(+e.target.value)}
+          className="accent-slate-700 focus:accent-emerald-400"
+        />
+      </div>
     </div>
   )
 }

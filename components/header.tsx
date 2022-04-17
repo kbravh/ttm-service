@@ -1,19 +1,20 @@
-import { Disclosure, Menu, Transition } from '@headlessui/react';
-import Link from 'next/link';
-import { useUser } from '../context/user';
-import { MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline';
-import { Fragment } from 'react';
-import { ClientOnly } from './clientOnly';
-import Image from 'next/image';
+import { Disclosure, Menu, Transition } from '@headlessui/react'
+import Link from 'next/link'
+import { useUser } from '../context/user'
+import { MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
+import { Fragment } from 'react'
+import { ClientOnly } from './clientOnly'
+import Image from 'next/image'
 
-const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
+const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ')
 
 const userNavigation = [
   { name: 'Your account', href: '/account' },
+  { name: 'Pricing', href: '/pricing' },
   { name: 'Logout', href: '/logout' },
-];
+]
 export const Header = () => {
-  const { user } = useUser();
+  const { user } = useUser()
 
   return (
     <Disclosure as="nav" className="bg-white shadow-sm">
@@ -26,9 +27,17 @@ export const Header = () => {
                 <Link href="/" scroll={false}>
                   <a className="flex-shrink-0 flex items-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img className="block lg:hidden h-8 w-auto" src="/ttm.png" alt="Tweet to Markdown" />
+                    <img
+                      className="block lg:hidden h-8 w-auto"
+                      src="/ttm.png"
+                      alt="Tweet to Markdown"
+                    />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img className="hidden lg:block h-8 w-auto" src="/ttm_full.png" alt="Tweet to Markdown" />
+                    <img
+                      className="hidden lg:block h-8 w-auto"
+                      src="/ttm_full.png"
+                      alt="Tweet to Markdown"
+                    />
                   </a>
                 </Link>
               </div>
@@ -44,7 +53,16 @@ export const Header = () => {
                           <Menu.Button className="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                             <span className="sr-only">Open user menu</span>
                             <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-emerald-400 to-indigo-500 flex items-center justify-center text-slate-50 overflow-hidden">
-                              {user?.user_metadata?.avatar_url ? <Image src={user?.user_metadata?.avatar_url} alt="User avatar" height={32} width={32} /> : <UserIcon width={24} height={24} />}
+                              {user?.user_metadata?.avatar_url ? (
+                                <Image
+                                  src={user?.user_metadata?.avatar_url}
+                                  alt="User avatar"
+                                  height={32}
+                                  width={32}
+                                />
+                              ) : (
+                                <UserIcon width={24} height={24} />
+                              )}
                             </div>
                           </Menu.Button>
                         </div>
@@ -61,7 +79,13 @@ export const Header = () => {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a href={item.href} className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
+                                  <a
+                                    href={item.href}
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700'
+                                    )}
+                                  >
                                     {item.name}
                                   </a>
                                 )}
@@ -75,21 +99,37 @@ export const Header = () => {
                       {/* Mobile menu button */}
                       <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
                         <span className="sr-only">Open main menu</span>
-                        {open ? <XIcon className="block h-6 w-6" aria-hidden="true" /> : <MenuIcon className="block h-6 w-6" aria-hidden="true" />}
+                        {open ? (
+                          <XIcon className="block h-6 w-6" aria-hidden="true" />
+                        ) : (
+                          <MenuIcon
+                            className="block h-6 w-6"
+                            aria-hidden="true"
+                          />
+                        )}
                       </Disclosure.Button>
                     </div>
                   </>
                 )}
                 {/* logged-out menu */}
                 {!user && (
-                  <div className="ml-6 flex items-center">
-                    {!user && (
-                      <Link href="/login" scroll={false}>
-                        <a type="button" className="bg-white p-1 rounded-full text-slate-500 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                          <span>Login</span>
-                        </a>
-                      </Link>
-                    )}
+                  <div className="ml-6 flex items-center gap-3">
+                    <Link href="/pricing" scroll={false}>
+                      <a
+                        type="button"
+                        className="bg-white p-1 rounded-full text-slate-500 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                      >
+                        <span>Pricing</span>
+                      </a>
+                    </Link>
+                    <Link href="/login" scroll={false}>
+                      <a
+                        type="button"
+                        className="bg-white p-1 rounded-full text-slate-500 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                      >
+                        <span>Login</span>
+                      </a>
+                    </Link>
                   </div>
                 )}
               </ClientOnly>
@@ -101,7 +141,12 @@ export const Header = () => {
               <div className="pt-4 pb-3 border-t border-gray-200">
                 <div className="mt-3 space-y-1">
                   {userNavigation.map((item) => (
-                    <Disclosure.Button key={item.name} as="a" href={item.href} className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                    <Disclosure.Button
+                      key={item.name}
+                      as="a"
+                      href={item.href}
+                      className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    >
                       {item.name}
                     </Disclosure.Button>
                   ))}
@@ -112,5 +157,5 @@ export const Header = () => {
         </>
       )}
     </Disclosure>
-  );
-};
+  )
+}
