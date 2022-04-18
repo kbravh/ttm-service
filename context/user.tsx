@@ -54,6 +54,7 @@ const Provider: React.FC = ({ children }) => {
     supabase.auth.onAuthStateChange(() => {
       getUserProfile()
     })
+
   }, [])
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const Provider: React.FC = ({ children }) => {
     })
   }
 
-  const logout = async () => {
+  const logout: UserContext['logout'] = async () => {
     await supabase.auth.signOut()
     setUser(null)
     setUserState('anon')

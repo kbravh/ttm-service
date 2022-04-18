@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { supabase } from '../utils/supabase'
 import { UserProfile } from '../types/database'
 import Link from 'next/link'
+import { useUser } from '../context/user'
 interface Props {
   plan: {
     id: string
@@ -18,12 +19,13 @@ interface Props {
     description: string
     tiers: { unit_amount: number; up_to: number }[]
   }
-  user: UserProfile | null
 }
 
-const Pricing: NextPage<Props> = ({ plan, user }) => {
+const Pricing: NextPage<Props> = ({ plan }) => {
   const [isEstimatorOpen, setIsEstimatorOpen] = useState(false)
   const [isSwitchbackOpen, setIsSwitchbackOpen] = useState(false)
+
+  const { user } = useUser()
 
   const handleClick = async () => {
     let subscriptionResponse
@@ -233,8 +235,6 @@ const Pricing: NextPage<Props> = ({ plan, user }) => {
 
 export default Pricing
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { user } = await supabase.auth.api.getUserByCookie(req)
-
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
     apiVersion: '2020-08-27',
   })
@@ -256,7 +256,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         description: product.description,
         tiers,
       },
-      user,
     },
   }
 }
