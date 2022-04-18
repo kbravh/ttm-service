@@ -8,8 +8,6 @@ import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { PriceEstimate } from '../components/priceEstimate'
 import { AnimatePresence, motion } from 'framer-motion'
-import { supabase } from '../utils/supabase'
-import { UserProfile } from '../types/database'
 import Link from 'next/link'
 import { useUser } from '../context/user'
 interface Props {
@@ -60,7 +58,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               {!user && (
                 <div className="my-5">
                   <Link href="/login">
-                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold">
+                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold shadow shadow-slate-800">
                       Sign up
                     </a>
                   </Link>
@@ -72,14 +70,14 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                   process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
                     <button
                       disabled
-                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                      className="px-5 py-2 rounded-md no-underline text-slate-800 leading-none bg-slate-100 font-semibold my-3 shadow shadow-slate-200"
                     >
                       You&apos;re in!
                     </button>
                   ) : (
                     <button
                       onClick={() => setIsSwitchbackOpen(true)}
-                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3 shadow shadow-slate-800"
                     >
                       Switch back?
                     </button>
@@ -106,14 +104,14 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                   process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
                     <button
                       onClick={handleClick}
-                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3 shadow shadow-slate-800"
                     >
                       Subscribe
                     </button>
                   ) : (
                     <button
                       disabled
-                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                      className="px-5 py-2 rounded-md no-underline text-slate-800 leading-none bg-slate-100 font-semibold my-3 shadow shadow-slate-200"
                     >
                       You&apos;re in!
                     </button>
@@ -123,7 +121,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               {!user && (
                 <div className="my-5">
                   <Link href="/login?redirect=pricing" scroll={false}>
-                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold">
+                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold shadow shadow-slate-800">
                       Sign up to subscribe
                     </a>
                   </Link>
