@@ -169,9 +169,9 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               static
               as={motion.div}
             >
+              <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
               <div className="flex items-center justify-center min-h-screen">
-                <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                <div className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center">
+                <Dialog.Panel className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center">
                   <Dialog.Title className="font-header text-3xl text-slate-800">
                     Price estimate
                   </Dialog.Title>
@@ -188,7 +188,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                   >
                     Looks good!
                   </button>
-                </div>
+                </Dialog.Panel>
               </div>
             </Dialog>
           )}
