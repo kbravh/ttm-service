@@ -9,7 +9,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@headlessui/react": "^1.4.2",
+    "@headlessui/react": "1.6",
     "@heroicons/react": "^1.0.5",
     "@logdna/logger": "^2.6.1",
     "@sentry/nextjs": "^6.17.6",

@@ -203,25 +203,24 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               static
               as={motion.div}
             >
+              <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
               <div className="flex items-center justify-center min-h-screen">
-                <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                <div className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center">
+                <Dialog.Panel className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center">
                   <Dialog.Title className="font-header text-3xl text-slate-800">
                     Switch to free tier
                   </Dialog.Title>
                   <Dialog.Description>
-                    <p>
-                      If you&apos;d like to switch back to free tier and cancel
-                      your subscription, please visit your account page and
-                      click &quot;Manage my subscription&quot;.
-                    </p>
+                    If you&apos;d like to switch back to free tier and cancel
+                    your subscription, please visit your account page and click
+                    &quot;Manage my subscription&quot;.
                   </Dialog.Description>
+
                   <Link href="/account">
-                    <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3">
+                    <a className="block px-5 py-2 mx-6 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3">
                       My account
                     </a>
                   </Link>
-                </div>
+                </Dialog.Panel>
               </div>
             </Dialog>
           )}
