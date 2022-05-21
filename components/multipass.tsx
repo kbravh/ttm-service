@@ -7,17 +7,19 @@ import { KeyIcon } from '@heroicons/react/outline'
 import { TweetRequest } from '../types/database'
 import { wait } from '../utils/timers'
 import { supabase } from '../utils/supabase'
+import { handlePortalClick } from '../utils/redirects'
 
-type keyState = 'ready' | 'loading' | 'error'
+type basicState = 'ready' | 'loading' | 'error'
 
 interface Usage {
   used: number
-  limit?: number
+  limit?: number | null
 }
 
 export const Multipass = () => {
   const { userState, user, setUser } = useUser()
-  const [keyState, setKeyState] = useState<keyState>('loading')
+  const [keyState, setKeyState] = useState<basicState>('loading')
+  const [portalState, setPortalState] = useState<basicState>('ready')
   const [usage, setUsage] = useState<Usage | null>()
   const copyButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -83,7 +85,9 @@ export const Multipass = () => {
       const subscription = supabase
         .from<TweetRequest>(`requests:user_id=eq.${user?.id}`)
         .on('INSERT', (payload) => {
-          if (isDateBetween(new Date(payload.new.created_at), firstDay, lastDay)) {
+          if (
+            isDateBetween(new Date(payload.new.created_at), firstDay, lastDay)
+          ) {
             setUsage((prevUsage) => ({
               limit: prevUsage?.limit,
               used: (prevUsage?.used ?? 0) + 1,
@@ -219,14 +223,22 @@ export const Multipass = () => {
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex">
                         <span className="flex-grow">
-                          {usage?.used}/{usage?.limit}
+                          {usage.limit === null && <>{usage?.used}</>}
+                          {!!usage.limit && (
+                            <>
+                              {usage?.used}/{usage?.limit}
+                            </>
+                          )}
                         </span>
                         <span>Resets each month</span>
                       </dd>
                       <dd className="mt-3 text-sm text-gray-700 sm:col-span-3 flex justify-center">
-                        <span>
-                          Need more tweets? Subscriptions coming soon.
-                        </span>
+                        {usage.limit === null && <button onClick={() => handlePortalClick((state) => setPortalState(state))}>Manage your subscription</button>}
+                        {!!usage.limit && (
+                          <span>
+                            Need more tweets? Subscriptions coming soon.
+                          </span>
+                        )}
                       </dd>
                     </div>
                   </>
