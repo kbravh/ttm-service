@@ -9,7 +9,7 @@ export const handlePortalClick = async (
       method: 'GET',
     })
     const { url } = response.data as { url: string }
-    window.location.replace(url)
+    window.location.assign(url)
   } catch (error) {
     stateHandler('error')
   }
