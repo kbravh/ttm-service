@@ -8,6 +8,7 @@ import { TweetRequest } from '../types/database'
 import { wait } from '../utils/timers'
 import { supabase } from '../utils/supabase'
 import { handlePortalClick } from '../utils/redirects'
+import Link from 'next/link'
 
 type basicState = 'ready' | 'loading' | 'error'
 
@@ -269,7 +270,7 @@ export const Multipass = () => {
                         )}
                         {!!usage.limit && (
                           <span>
-                            Need more tweets? Subscriptions coming soon.
+                            Need more tweets? <Link href='/pricing'>Get a subscription!</Link>
                           </span>
                         )}
                       </dd>

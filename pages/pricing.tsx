@@ -66,7 +66,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               )}
               {user && (
                 <>
-                  {user.subscription_item_id ===
+                  {user.subscription_id ===
                   process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
                     <button
                       disabled
@@ -100,7 +100,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               </div>
               {user && (
                 <>
-                  {user.subscription_item_id ===
+                  {user.subscription_id ===
                   process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
                     <button
                       onClick={handleClick}
