@@ -14,11 +14,11 @@ const Success: NextPage = () => {
   return (
     <Layout title="Success">
       <MainWrapper title="Success">
-        Subscription created successfully!
+        <p>Subscription created successfully!</p>
         <p>
           Head back to your account page, or view your subscription details.
         </p>
-        <div className="flex flex-col sm:flex-row justify-around items-center gap-7 sm:gap-20 select-none">
+        <div className="flex flex-col sm:flex-row justify-around items-center gap-7 sm:gap-20 select-none mt-6">
           <div className="relative group">
             <div className="absolute inset-0 rounded-full blur bg-gradient-to-tr from-emerald-400 to-indigo-500 opacity-75 transition group-hover:opacity-100 group-hover:scale-105 group-hover:duration-200 duration-1000"></div>
             <Link href="/account">
@@ -33,13 +33,25 @@ const Success: NextPage = () => {
           <div className="relative group">
             <div className="absolute inset-0 rounded-full blur bg-gradient-to-tr from-emerald-400 to-indigo-500 opacity-75 transition group-hover:opacity-100 group-hover:scale-105 group-hover:duration-200 duration-1000"></div>
             <button
+              disabled={portalState === 'loading'}
               className="relative block px-5 py-2 rounded-md bg-slate-800 leading-none text-slate-100 font-semibold"
               onClick={() =>
                 handlePortalClick((state) => setPortalState(state))
               }
             >
               <span className="flex items-center space-x-2">
-                <CashIcon className="h-5 w-auto" />
+                {portalState === 'ready' && <CashIcon className="h-5 w-auto" />}
+                {portalState === 'loading' && (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div
+                      className="spinner-border animate-spin inline-block w-4 h-4 border-1 rounded-full"
+                      role="status"
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                )}
+                {portalState === 'error' && <CashIcon className="h-5 w-auto" />}
                 <span>Subscription details</span>
               </span>
             </button>
