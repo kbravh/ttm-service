@@ -3,7 +3,7 @@ import { useUser } from '../context/user'
 import { getFirstAndLastMomentOfMonth, isDateBetween } from '../utils/dates'
 import { Subscription, UserProfile } from '../types/database'
 import { useEffect, useRef, useState } from 'react'
-import { KeyIcon } from '@heroicons/react/outline'
+import { CashIcon, KeyIcon } from '@heroicons/react/outline'
 import { TweetRequest } from '../types/database'
 import { wait } from '../utils/timers'
 import { supabase } from '../utils/supabase'
@@ -233,7 +233,40 @@ export const Multipass = () => {
                         <span>Resets each month</span>
                       </dd>
                       <dd className="mt-3 text-sm text-gray-700 sm:col-span-3 flex justify-center">
-                        {usage.limit === null && <button onClick={() => handlePortalClick((state) => setPortalState(state))}>Manage your subscription</button>}
+                        {usage.limit === null && (
+                          <button
+                            type="button"
+                            disabled={portalState === 'loading'}
+                            className="ml-2 py-1 px-2 rounded-sm font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                            onClick={() =>
+                              handlePortalClick((state) =>
+                                setPortalState(state)
+                              )
+                            }
+                          >
+                            <span className="flex items-center space-x-2">
+                              {portalState === 'ready' && (
+                                <CashIcon className="h-5 w-auto" />
+                              )}
+                              {portalState === 'loading' && (
+                                <div className="flex items-center justify-center space-x-2">
+                                  <div
+                                    className="spinner-border animate-spin inline-block w-4 h-4 border-1 rounded-full"
+                                    role="status"
+                                  >
+                                    <span className="visually-hidden">
+                                      Loading...
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                              {portalState === 'error' && (
+                                <CashIcon className="h-5 w-auto" />
+                              )}
+                              <span>Manage your subscription</span>
+                            </span>
+                          </button>
+                        )}
                         {!!usage.limit && (
                           <span>
                             Need more tweets? Subscriptions coming soon.
