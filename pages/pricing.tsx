@@ -23,7 +23,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
   const [isEstimatorOpen, setIsEstimatorOpen] = useState(false)
   const [isSwitchbackOpen, setIsSwitchbackOpen] = useState(false)
 
-  const { user } = useUser()
+  const { user, userState } = useUser()
 
   const handleClick = async () => {
     let subscriptionResponse
@@ -64,25 +64,31 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                   </Link>
                 </div>
               )}
-              {user && (
-                <>
+              {user && userState === 'full' && (
+                <AnimatePresence>
                   {user.subscription_id ===
                   process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
-                    <button
+                    <motion.button
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 10, opacity: 0 }}
                       disabled
                       className="px-5 py-2 rounded-md no-underline text-slate-800 leading-none bg-slate-100 font-semibold my-3 shadow shadow-slate-200"
                     >
                       You&apos;re in!
-                    </button>
+                    </motion.button>
                   ) : (
-                    <button
+                    <motion.button
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 10, opacity: 0 }}
                       onClick={() => setIsSwitchbackOpen(true)}
                       className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3 shadow shadow-slate-800"
                     >
                       Switch back?
-                    </button>
+                    </motion.button>
                   )}
-                </>
+                </AnimatePresence>
               )}
             </div>
             <ul className="pt-2">
@@ -98,25 +104,31 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               <div className="text-slate-400 tex-sm">
                 Take it to the next level
               </div>
-              {user && (
-                <>
+              {user && userState === 'full' && (
+                <AnimatePresence>
                   {user.subscription_id ===
                   process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID ? (
-                    <button
+                    <motion.button
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 10, opacity: 0 }}
                       onClick={handleClick}
                       className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3 shadow shadow-slate-800"
                     >
                       Subscribe
-                    </button>
+                    </motion.button>
                   ) : (
-                    <button
+                    <motion.button
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 10, opacity: 0 }}
                       disabled
                       className="px-5 py-2 rounded-md no-underline text-slate-800 leading-none bg-slate-100 font-semibold my-3 shadow shadow-slate-200"
                     >
                       You&apos;re in!
-                    </button>
+                    </motion.button>
                   )}
-                </>
+                </AnimatePresence>
               )}
               {!user && (
                 <div className="my-5">
@@ -160,41 +172,48 @@ const Pricing: NextPage<Props> = ({ plan }) => {
           </div>
         </div>
 
-        <AnimatePresence>
+        <>
           {isEstimatorOpen && (
             <Dialog
               open={isEstimatorOpen}
               onClose={() => setIsEstimatorOpen(false)}
               className="fixed z-10 inset-0 overflow-y-auto"
               static
-              as={motion.div}
             >
               <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
               <div className="flex items-center justify-center min-h-screen">
-                <Dialog.Panel className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center">
-                  <Dialog.Title className="font-header text-3xl text-slate-800">
-                    Price estimate
-                  </Dialog.Title>
-                  <Dialog.Description>
-                    <p>
-                      Here&apos;s an estimate of the cost by number of
-                      downloaded tweets.
-                    </p>
-                  </Dialog.Description>
-                  <PriceEstimate />
-                  <button
-                    onClick={() => setIsEstimatorOpen(false)}
-                    className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                <AnimatePresence>
+                  <Dialog.Panel
+                    className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center"
+                    as={motion.div}
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 50, opacity: 0 }}
                   >
-                    Looks good!
-                  </button>
-                </Dialog.Panel>
+                    <Dialog.Title className="font-header text-3xl text-slate-800">
+                      Price estimate
+                    </Dialog.Title>
+                    <Dialog.Description>
+                      <p>
+                        Here&apos;s an estimate of the cost by number of
+                        downloaded tweets.
+                      </p>
+                    </Dialog.Description>
+                    <PriceEstimate />
+                    <button
+                      onClick={() => setIsEstimatorOpen(false)}
+                      className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3"
+                    >
+                      Looks good!
+                    </button>
+                  </Dialog.Panel>
+                </AnimatePresence>
               </div>
             </Dialog>
           )}
-        </AnimatePresence>
+        </>
 
-        <AnimatePresence>
+        <>
           {isSwitchbackOpen && (
             <Dialog
               open={isSwitchbackOpen}
@@ -202,29 +221,39 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               className="fixed z-10 inset-0 overflow-y-auto"
               static
               as={motion.div}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
               <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
               <div className="flex items-center justify-center min-h-screen">
-                <Dialog.Panel className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center">
-                  <Dialog.Title className="font-header text-3xl text-slate-800">
-                    Switch to free tier
-                  </Dialog.Title>
-                  <Dialog.Description>
-                    If you&apos;d like to switch back to free tier and cancel
-                    your subscription, please visit your account page and click
-                    &quot;Manage my subscription&quot;.
-                  </Dialog.Description>
-
-                  <Link href="/account">
-                    <a className="block px-5 py-2 mx-6 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3">
-                      My account
-                    </a>
-                  </Link>
-                </Dialog.Panel>
+                <AnimatePresence>
+                  <Dialog.Panel
+                    className="relative bg-white rounded-md max-w-sm mx-auto p-4 text-center"
+                    as={motion.div}
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 50, opacity: 0 }}
+                  >
+                    <Dialog.Title className="font-header text-3xl text-slate-800">
+                      Switch to free tier
+                    </Dialog.Title>
+                    <Dialog.Description>
+                      If you&apos;d like to switch back to free tier and cancel
+                      your subscription, please visit your account page and
+                      click &quot;Manage my subscription&quot;.
+                    </Dialog.Description>
+                    <Link href="/account">
+                      <a className="block px-5 py-2 mx-6 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3">
+                        My account
+                      </a>
+                    </Link>
+                  </Dialog.Panel>
+                </AnimatePresence>
               </div>
             </Dialog>
           )}
-        </AnimatePresence>
+        </>
       </MainWrapper>
     </Layout>
   )
