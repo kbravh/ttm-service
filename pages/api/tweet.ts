@@ -45,7 +45,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const adminSupabase = getAdminSupabase();
 
-  const { data: user } = await adminSupabase.from<UserProfile>('users').select('id,subscriptions:subscription_id (*)').eq('key', apiKey).single();
+  const { data: user } = await adminSupabase.from<UserProfile>('users').select('id,subscription_item_id,subscriptions:subscription_id (*)').eq('key', apiKey).single();
 
   const {data: used} = await adminSupabase.rpc<number>('monthly_usage', { user_ident: user?.id }).single();
 
@@ -195,7 +195,15 @@ const handler: NextApiHandler = async (req, res) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
       apiVersion: '2020-08-27'
     })
-    await stripe.subscriptionItems.createUsageRecord(user.subscription_item_id ?? '', {quantity: 1})
+    try {
+      await stripe.subscriptionItems.createUsageRecord(user.subscription_item_id ?? '', {quantity: 1})
+    } catch (error) {
+      console.error(error)
+      logger.error?.({
+        message: 'There was an error reporting usage to Stripe.',
+        error
+      })
+    }
   }
 };
 
