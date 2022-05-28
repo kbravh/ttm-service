@@ -41,7 +41,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   if (!stripe_customer_id) {
     const customer: Stripe.Customer = await stripe.customers.create({
-      email: req.body.record.email,
+      email: user.email,
     })
     stripe_customer_id = customer.id
 
@@ -50,7 +50,7 @@ const handler: NextApiHandler = async (req, res) => {
       .update({
         stripe_customer_id,
       })
-      .eq('id', req.body.record.id)
+      .eq('id', user.id)
       .single()
   }
 
