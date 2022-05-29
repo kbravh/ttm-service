@@ -1,106 +1,25 @@
 import axios from 'axios'
 import { useUser } from '../context/user'
-import { getFirstAndLastMomentOfMonth, isDateBetween } from '../utils/dates'
-import { Subscription, UserProfile } from '../types/database'
+import { UserProfile } from '../types/database'
 import { useEffect, useRef, useState } from 'react'
 import { CashIcon, KeyIcon } from '@heroicons/react/outline'
-import { TweetRequest } from '../types/database'
 import { wait } from '../utils/timers'
-import { supabase } from '../utils/supabase'
 import { handlePortalClick } from '../utils/redirects'
 import Link from 'next/link'
+import { useUsage } from '../hooks/useUsage'
 
 type basicState = 'ready' | 'loading' | 'error'
-
-interface Usage {
-  used: number
-  limit?: number | null
-}
 
 export const Multipass = () => {
   const { userState, user, setUser } = useUser()
   const [keyState, setKeyState] = useState<basicState>('loading')
   const [portalState, setPortalState] = useState<basicState>('ready')
-  const [usage, setUsage] = useState<Usage | null>()
   const copyButtonRef = useRef<HTMLButtonElement>(null)
+  const usage = useUsage()
 
   useEffect(() => {
     setKeyState('ready')
   }, [user])
-
-  useEffect(() => {
-    const fetchUsage = async () => {
-      if (userState === 'full') {
-        const [firstDay, lastDay] = getFirstAndLastMomentOfMonth()
-        const usageRequest = supabase
-          .from<TweetRequest>('requests')
-          .select('*', { count: 'exact', head: true })
-          .gte('created_at', firstDay.toISOString())
-          .lte('created_at', lastDay.toISOString())
-
-        const subscriptionRequest = supabase
-          .from<Subscription>('subscriptions')
-          .select('limit')
-          .single()
-
-        const [
-          { count, error: usageError },
-          { data: subscription, error: subscriptionError },
-        ] = await Promise.all([usageRequest, subscriptionRequest])
-
-        if (usageError || subscriptionError) {
-          if (usageError) {
-            console.error(
-              'There was an error fetching the number of tweets used',
-              usageError
-            )
-          }
-          if (subscriptionError) {
-            console.error(
-              'There was an error fetching the subscription information',
-              subscriptionError
-            )
-          }
-          return
-        }
-
-        if (count === null) {
-          console.error(
-            'There was an error retrieving an accurate tweet count.'
-          )
-          return
-        }
-
-        setUsage({
-          used: count,
-          limit: subscription?.limit,
-        })
-      }
-    }
-    fetchUsage()
-  }, [userState])
-
-  useEffect(() => {
-    if (userState === 'full') {
-      const [firstDay, lastDay] = getFirstAndLastMomentOfMonth()
-      const subscription = supabase
-        .from<TweetRequest>(`requests:user_id=eq.${user?.id}`)
-        .on('INSERT', (payload) => {
-          if (
-            isDateBetween(new Date(payload.new.created_at), firstDay, lastDay)
-          ) {
-            setUsage((prevUsage) => ({
-              limit: prevUsage?.limit,
-              used: (prevUsage?.used ?? 0) + 1,
-            }))
-          }
-        })
-        .subscribe()
-      return () => {
-        supabase.removeSubscription(subscription)
-      }
-    }
-  }, [userState, user])
 
   const copyKeyToClipboard = async () => {
     await navigator.clipboard.writeText(user?.key ?? '')
@@ -224,17 +143,17 @@ export const Multipass = () => {
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex">
                         <span className="flex-grow">
-                          {usage.limit === null && <>{usage?.used}</>}
-                          {!!usage.limit && (
+                          {usage.type === 'metered' && <>{usage?.used}</>}
+                          {usage.type === 'capped' && (
                             <>
-                              {usage?.used}/{usage?.limit}
+                              {usage.used}/{usage?.limit}
                             </>
                           )}
                         </span>
                         <span>Resets each month</span>
                       </dd>
                       <dd className="mt-3 text-sm text-gray-700 sm:col-span-3 flex justify-center">
-                        {usage.limit === null && (
+                        {usage.type === 'metered' && (
                           <button
                             type="button"
                             disabled={portalState === 'loading'}
@@ -268,9 +187,10 @@ export const Multipass = () => {
                             </span>
                           </button>
                         )}
-                        {!!usage.limit && (
+                        {usage.type === 'capped' && (
                           <span>
-                            Need more tweets? <Link href='/pricing'>Get a subscription!</Link>
+                            Need more tweets?{' '}
+                            <Link href="/pricing">Get a subscription!</Link>
                           </span>
                         )}
                       </dd>

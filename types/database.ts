@@ -19,6 +19,7 @@ export interface Subscription {
   created_at: Date | string
   price: number
   limit: number | null
+  type: 'capped' | 'metered'
   stripe_price_id: string
   description: string
 }
