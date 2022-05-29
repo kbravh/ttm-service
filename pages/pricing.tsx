@@ -6,6 +6,7 @@ import { Layout } from '../components/layout'
 import { MainWrapper } from '../components/mainWrapper'
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
+import { PencilAltIcon } from '@heroicons/react/outline'
 import { PriceEstimate } from '../components/priceEstimate'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
@@ -22,10 +23,14 @@ interface Props {
 const Pricing: NextPage<Props> = ({ plan }) => {
   const [isEstimatorOpen, setIsEstimatorOpen] = useState(false)
   const [isSwitchbackOpen, setIsSwitchbackOpen] = useState(false)
+  const [subscribeState, setSubscribeState] = useState<
+    'ready' | 'loading' | 'error'
+  >('ready')
 
   const { user, userState } = useUser()
 
   const handleClick = async () => {
+    setSubscribeState('loading')
     let subscriptionResponse
     try {
       subscriptionResponse = await axios('/api/subscribe', {
@@ -35,6 +40,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
         },
       })
     } catch (error) {
+      setSubscribeState('error')
       if (axios.isAxiosError(error)) {
         console.log(error)
       }
@@ -115,7 +121,27 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                       onClick={handleClick}
                       className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3 shadow shadow-slate-800"
                     >
-                      Subscribe
+                      <span className="flex items-center space-x-2">
+                        {subscribeState === 'loading' && (
+                          <div className="flex items-center justify-center space-x-2">
+                            <div
+                              className="spinner-border animate-spin inline-block w-4 h-4 border-1 rounded-full"
+                              role="status"
+                            >
+                              <span className="visually-hidden">
+                                Loading...
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        {subscribeState === 'ready' && (
+                          <PencilAltIcon className="h-5 w-auto" />
+                        )}
+                        {subscribeState === 'error' && (
+                          <PencilAltIcon className="h-5 w-auto" />
+                        )}
+                        <span>Subscribe</span>
+                      </span>
                     </motion.button>
                   ) : (
                     <motion.button
