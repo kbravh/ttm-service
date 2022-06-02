@@ -12,6 +12,7 @@ const Login: NextPage = () => {
   const { login, user } = useUser();
   const router = useRouter();
   const [loadingState, setLoadingState] = useState<'ready' | 'loading'>('ready');
+  const [consent, setConsent] = useState(false);
 
   if (user) {
     router.push('/');
@@ -27,11 +28,14 @@ const Login: NextPage = () => {
                 <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 space-y-3 sm:space-y-0">
                   <div className="relative group flex justify-center">
                     <button
+                      disabled={!consent}
                       onClick={() => {
                         setLoadingState('loading');
                         login({ provider: 'twitter' });
                       }}
-                      className="relative block px-5 py-2 rounded-md no-underline bg-slate-800 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 hover:bg-gradient-to-tr from-emerald-400 to-indigo-500"
+                      className={`relative block px-5 py-2 rounded-md no-underline bg-slate-800 disabled:bg-slate-400 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 ${
+                        consent ? 'hover:bg-gradient-to-tr from-emerald-400 to-indigo-500' : ''
+                      }`}
                     >
                       <span className="flex items-center space-x-2">
                         <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -43,11 +47,14 @@ const Login: NextPage = () => {
                   </div>
                   <div className="relative group flex justify-center">
                     <button
+                      disabled={!consent}
                       onClick={() => {
                         setLoadingState('loading');
                         login({ provider: 'github' });
                       }}
-                      className="relative block px-5 py-2 rounded-md no-underline bg-slate-800 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 hover:bg-gradient-to-tr from-emerald-400 to-indigo-500"
+                      className={`relative block px-5 py-2 rounded-md no-underline bg-slate-800 disabled:bg-slate-400 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 ${
+                        consent ? 'hover:bg-gradient-to-tr from-emerald-400 to-indigo-500' : ''
+                      }`}
                     >
                       <span className="flex items-center space-x-2">
                         <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -62,16 +69,20 @@ const Login: NextPage = () => {
                     </button>
                   </div>
                 </div>
-                <p className="mt-4">
-                  By using the service, you agree to the{' '}
-                  <Link href="/terms-of-service" scroll={false}>
-                    <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Terms of Service</a>
-                  </Link>{' '}
-                  and{' '}
-                  <Link href="/privacy-policy" scroll={false}>
-                    <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Privacy Policy</a>
-                  </Link>
-                </p>
+
+                <div className="flex gap-1 items-center">
+                  <input type="checkbox" checked={consent} onChange={() => setConsent(!consent)} className="appearance-none accent-emerald-500 checked:bg-emerald-500 checked:focus:bg-emerald-500 hover:bg-emerald-400 checked:hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300" />
+                  <p className="mt-4">
+                    To use the service, please consent to the{' '}
+                    <Link href="/terms-of-service" scroll={false}>
+                      <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Terms of Service</a>
+                    </Link>{' '}
+                    and{' '}
+                    <Link href="/privacy-policy" scroll={false}>
+                      <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Privacy Policy</a>
+                    </Link>
+                  </p>
+                </div>
               </>
             )}
             {loadingState === 'loading' && (
