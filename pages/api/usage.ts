@@ -50,16 +50,20 @@ const handler: NextApiHandler = async (req, res) => {
 
   const currentPeriod = subscriptionPeriods.data[0]
 
-  if (!currentPeriod.period.start || !currentPeriod.period.end) {
-    console.error('The period is missing a start or end date.')
-    return res.status(400).send('The period is missing a start or end date.')
-  }
+  const subscriptionItem = await stripe.subscriptionItems.retrieve(
+    subscription_item_id
+  )
+  const subscription = await stripe.subscriptions.retrieve(
+    subscriptionItem.subscription
+  )
 
   const usage: UsageResponse = {
     count: currentPeriod.total_usage,
-    startDate: currentPeriod.period.start,
-    endDate: currentPeriod.period.end,
+    startDate: subscription.current_period_start * 1000, //timestamp is in seconds
+    endDate: subscription.current_period_end * 1000, // timestamp is in seconds
   }
 
   return res.status(200).send(usage)
 }
+
+export default handler

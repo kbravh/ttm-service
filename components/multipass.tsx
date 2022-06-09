@@ -142,15 +142,27 @@ export const Multipass = () => {
                         Tweets used
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex">
-                        <span className="flex-grow">
-                          {usage.type === 'metered' && <>{usage?.used}</>}
+                        <span className="flex flex-grow justify-between">
+                          {usage.type === 'metered' && (
+                            <>
+                              <span>{usage?.used}</span>
+                              <span>
+                                Resets on{' '}
+                                {new Intl.DateTimeFormat('en-US', {
+                                  dateStyle: 'medium',
+                                }).format(usage.endDate)}
+                              </span>
+                            </>
+                          )}
                           {usage.type === 'capped' && (
                             <>
-                              {usage.used}/{usage?.limit}
+                              <span>
+                                {usage.used}/{usage?.limit}
+                              </span>
+                              <span>Resets each month</span>
                             </>
                           )}
                         </span>
-                        <span>Resets each month</span>
                       </dd>
                       <dd className="mt-3 text-sm text-gray-700 sm:col-span-3 flex justify-center">
                         {usage.type === 'metered' && (

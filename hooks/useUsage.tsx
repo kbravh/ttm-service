@@ -49,8 +49,8 @@ export const useUsage = () => {
           setUsage({
             used: usageResponse.count,
             type: 'metered',
-            startDate: new Date(usageResponse.startDate),
-            endDate: new Date(usageResponse.endDate),
+            startDate: usageResponse.startDate ? new Date(usageResponse.startDate) : undefined,
+            endDate: usageResponse.endDate ? new Date(usageResponse.endDate) : undefined,
           })
         }
 
@@ -84,11 +84,11 @@ export const useUsage = () => {
   useEffect(() => {
     if (user && userState === 'full') {
       let start: Date, end: Date
-      if (usage?.startDate && usage.endDate) {
+      if (usage?.startDate && usage?.endDate) {
         start = usage.startDate
         end = usage.endDate
       } else {
-        ;[start, end] = getFirstAndLastMomentOfMonth()
+        [start, end] = getFirstAndLastMomentOfMonth()
       }
       const subscription = supabase
         .from<TweetRequest>(`requests:user_id=eq.${user?.id}`)
