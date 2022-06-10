@@ -189,7 +189,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
               <div className="col-span-2 mt-3 text-sm">
                 Check out the{' '}
                 <button onClick={() => setIsEstimatorOpen(true)}>
-                  <span className="underline decoration-wavy decoration-emerald-400">
+                  <span className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">
                     price estimator
                   </span>
                 </button>
