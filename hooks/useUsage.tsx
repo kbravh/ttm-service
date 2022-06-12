@@ -97,6 +97,7 @@ export const useUsage = () => {
             setUsage((prevUsage) => {
               if (prevUsage) {
                 return {
+                  ...prevUsage,
                   limit: prevUsage.limit,
                   used: (prevUsage.used ?? 0) + 1,
                   type: prevUsage.type,

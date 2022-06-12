@@ -11,7 +11,7 @@ export interface UserProfile extends User {
   // proto property, inserted by join
   subscriptions?: Subscription
   stripe_customer_id?: string
-  subscription_item_id?: string
+  subscription_item_id?: string | null
 }
 
 export interface Subscription {
