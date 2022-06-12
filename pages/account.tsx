@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { ClientOnly } from '../components/clientOnly';
 import { Layout } from '../components/layout';
 import { MainWrapper } from '../components/mainWrapper';
@@ -33,7 +33,7 @@ const Account: NextPage<Props> = ({user}) => {
 
 export default Account;
 
-export const getServerSideProps = async ({ req }: { req: Request }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { user } = await supabase.auth.api.getUserByCookie(req);
 
   if (!user) {

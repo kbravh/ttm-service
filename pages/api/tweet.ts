@@ -8,6 +8,7 @@ import { URLSearchParams } from 'url';
 import { TweetRecord, TweetRequest, UserProfile } from '../../types/database';
 import { Tweet } from '../../types/tweet';
 import { withSentry, captureException, addBreadcrumb, Severity } from '@sentry/nextjs';
+import Stripe from 'stripe';
 
 const cors = Cors({
   methods: ['GET', 'POST', 'OPTIONS'],
@@ -44,12 +45,11 @@ const handler: NextApiHandler = async (req, res) => {
 
   const adminSupabase = getAdminSupabase();
 
-  const { data: user } = await adminSupabase.from<UserProfile>('users').select('id,subscriptions:subscription_id (*)').eq('key', apiKey).single();
+  const { data: user } = await adminSupabase.from<UserProfile>('users').select('id,subscription_item_id,subscriptions:subscription_id (*)').eq('key', apiKey).single();
 
-  const {data: usage} = await adminSupabase.rpc<number>('monthly_usage', { user_ident: user?.id });
+  const {data: used} = await adminSupabase.rpc<number>('monthly_usage', { user_ident: user?.id }).single();
 
-  const used = (Array.isArray(usage) ? usage[0] : usage);
-  const limit = user?.subscriptions?.limit ?? 0;
+  const limit = user?.subscriptions?.limit;
 
   if (!user) {
     logger.info?.({
@@ -63,7 +63,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(400).send('Subscription information not found');
   }
 
-  if (used >= limit) {
+  if (limit !== undefined && limit !== null && used >= limit) {
     return res.status(402).send(`Usage limit has been met: ${used}/${limit}`)
   }
 
@@ -185,6 +185,25 @@ const handler: NextApiHandler = async (req, res) => {
     }
   } catch (error) {
     console.error('There was an issue saving the tweet and record.');
+  }
+
+
+  if (user.subscription_id !== process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID) {
+    logger.info?.({
+      message: 'Reporting usage to Stripe'
+    })
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
+      apiVersion: '2020-08-27'
+    })
+    try {
+      await stripe.subscriptionItems.createUsageRecord(user.subscription_item_id ?? '', {quantity: 1})
+    } catch (error) {
+      console.error(error)
+      logger.error?.({
+        message: 'There was an error reporting usage to Stripe.',
+        error
+      })
+    }
   }
 };
 

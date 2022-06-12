@@ -10,13 +10,18 @@ export interface UserProfile extends User {
   subscription_end?: Date | string
   // proto property, inserted by join
   subscriptions?: Subscription
+  stripe_customer_id?: string
+  subscription_item_id?: string
 }
 
 export interface Subscription {
   id: string
   created_at: Date | string
   price: number
-  limit: number
+  limit: number | null
+  type: 'capped' | 'metered'
+  stripe_price_id: string
+  description: string
 }
 
 export interface TweetRecord {
