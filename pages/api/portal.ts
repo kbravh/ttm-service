@@ -1,22 +1,40 @@
-import { NextApiHandler } from "next";
-import Stripe from "stripe";
-import Cors from 'cors';
-import { UserProfile } from "../../types/database";
+import { NextApiHandler } from 'next'
+import Stripe from 'stripe'
+import Cors from 'cors'
+import { UserProfile } from '../../types/database'
 import { getAdminSupabase } from '../../utils/supabase'
-import { runMiddleware } from "../../utils/runMiddleware";
+import { runMiddleware } from '../../utils/runMiddleware'
+import { createLogger } from '@logdna/logger'
+import { withSentry } from '@sentry/nextjs'
 
 const adminSupabase = getAdminSupabase()
 
 const cors = Cors({
   methods: ['GET', 'POST', 'OPTIONS'],
-});
+})
 
 const handler: NextApiHandler = async (req, res) => {
-  await runMiddleware(req, res, cors);
+  const logger = createLogger(process.env.LOGDNA_INGESTION_KEY ?? '', {
+    tags: ['stripe-portal'],
+    app: 'ttm-service',
+    env: process.env.NODE_ENV,
+    meta: {
+      request: {
+        query: req.query,
+        headers: req.rawHeaders,
+        url: req.url,
+      },
+    },
+  })
 
-  const {user} = await adminSupabase.auth.api.getUserByCookie(req)
+  await runMiddleware(req, res, cors)
+
+  const { user } = await adminSupabase.auth.api.getUserByCookie(req)
 
   if (!user) {
+    logger.info?.({
+      message: 'Superbase user not found',
+    })
     return res.status(401).send('Unauthorized')
   }
 
@@ -27,12 +45,17 @@ const handler: NextApiHandler = async (req, res) => {
     .single()
 
   if (error) {
-    console.log(error)
+    logger.error?.({
+      message: 'Error while fetching Stripe customer id for current user',
+      error,
+    })
     return res.status(400).send(error)
   }
 
   if (!data?.stripe_customer_id) {
-    console.log('No stripe customer found')
+    logger.error?.({
+      message: 'No Stripe customer ID found for current user',
+    })
     return res.status(400).send('User not found')
   }
 
@@ -40,12 +63,21 @@ const handler: NextApiHandler = async (req, res) => {
     apiVersion: '2020-08-27',
   })
 
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer: data.stripe_customer_id,
-    return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/account`
-  })
+  try {
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: data.stripe_customer_id,
+      return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/account`,
+    })
 
-  res.send({url: portalSession.url})
+    return res.send({ url: portalSession.url })
+  } catch (error) {
+    logger.error?.({
+      message: 'Unable to create a portal session for user',
+      customerId: data.stripe_customer_id,
+      error,
+    })
+  }
+  return res.status(400).send('Unable to create a Stripe session for this user')
 }
 
-export default handler
+export default withSentry(handler)
