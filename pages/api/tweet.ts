@@ -80,7 +80,7 @@ const handler: NextApiHandler = async (req, res) => {
   const params = new URLSearchParams({
     expansions: 'author_id,attachments.poll_ids,attachments.media_keys',
     'user.fields': 'name,username,profile_image_url',
-    'tweet.fields': 'attachments,public_metrics,entities,conversation_id,referenced_tweets',
+    'tweet.fields': 'attachments,public_metrics,entities,conversation_id,referenced_tweets,created_at',
     'media.fields': 'url,alt_text',
     'poll.fields': 'options',
   });
