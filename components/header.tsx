@@ -10,7 +10,7 @@ const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ')
 
 const userNavigation = [
   { name: 'Your account', href: '/account' },
-  { name: 'Pricing', href: '/pricing' },
+  // TODO { name: 'Pricing', href: '/pricing' },
   { name: 'Logout', href: '/logout' },
 ]
 export const Header = () => {
@@ -78,7 +78,7 @@ export const Header = () => {
                           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
-                                {({ active }) => (
+                                {({ active }: {active: boolean}) => (
                                   <a
                                     href={item.href}
                                     className={classNames(

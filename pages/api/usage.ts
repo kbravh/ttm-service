@@ -81,7 +81,7 @@ const handler: NextApiHandler = async (req, res) => {
   )
 
   logger.info?.({
-    message: 'User\s Stripe subscription information found',
+    message: 'User\'s Stripe subscription information found',
     currentPeriod,
     subscription
   })

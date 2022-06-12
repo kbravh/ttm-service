@@ -202,7 +202,8 @@ export const Multipass = () => {
                         {usage.type === 'capped' && (
                           <span>
                             Need more tweets?{' '}
-                            <Link href="/pricing">Get a subscription!</Link>
+                            {/* <Link href="/pricing">Get a subscription!</Link> */}
+                            <span>Subscriptions coming soon!</span>
                           </span>
                         )}
                       </dd>
