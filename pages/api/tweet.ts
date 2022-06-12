@@ -189,6 +189,10 @@ const handler: NextApiHandler = async (req, res) => {
         }
       )
     if (tweetError) {
+      logger.error?.({
+        message: 'Error logging tweet to database',
+        error: tweetError
+      })
       captureException(tweetError)
     } else {
       logger.info?.({
@@ -209,6 +213,10 @@ const handler: NextApiHandler = async (req, res) => {
         source,
       })
     if (requestError) {
+      logger.error?.({
+        message: 'Error logging tweet request to database',
+        error: requestError
+      })
       captureException(requestError)
     } else {
       logger.info?.({
@@ -217,6 +225,10 @@ const handler: NextApiHandler = async (req, res) => {
       })
     }
   } catch (error) {
+    logger.error?.({
+      message: 'Error logging tweet and request to database',
+      error
+    })
     console.error('There was an issue saving the tweet and record.')
   }
 
