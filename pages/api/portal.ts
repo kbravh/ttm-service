@@ -59,11 +59,6 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(400).send('User not found')
   }
 
-  logger.info?.({
-    message: 'User\'s Stripe ID found',
-    customerId: data.stripe_customer_id
-  })
-
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
     apiVersion: '2020-08-27',
   })
