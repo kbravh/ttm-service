@@ -195,7 +195,7 @@ export const Multipass = () => {
                               {portalState === 'error' && (
                                 <CashIcon className="h-5 w-auto" />
                               )}
-                              <span>Manage your subscription</span>
+                              <span>Manage my subscription</span>
                             </span>
                           </button>
                         )}
