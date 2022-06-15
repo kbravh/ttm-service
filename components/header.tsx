@@ -10,7 +10,7 @@ const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ')
 
 const userNavigation = [
   { name: 'Your account', href: '/account' },
-  // TODO { name: 'Pricing', href: '/pricing' },
+  { name: 'Pricing', href: '/pricing' },
   { name: 'Logout', href: '/logout' },
 ]
 export const Header = () => {

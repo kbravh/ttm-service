@@ -119,7 +119,6 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: 10, opacity: 0 }}
                       onClick={handleClick}
-                      disabled // TODO
                       className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold my-3 shadow shadow-slate-800"
                     >
                       <span className="flex items-center space-x-2">
@@ -141,8 +140,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                         {subscribeState === 'error' && (
                           <PencilAltIcon className="h-5 w-auto" />
                         )}
-                        {/* TODO <span>Subscribe</span> */}
-                        <span>Coming soon!</span>
+                        <span>Subscribe</span>
                       </span>
                     </motion.button>
                   ) : (
@@ -162,8 +160,7 @@ const Pricing: NextPage<Props> = ({ plan }) => {
                 <div className="my-5">
                   <Link href="/login?redirect=pricing" scroll={false}>
                     <a className="px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold shadow shadow-slate-800">
-                      {/* TODO Sign up to subscribe */}
-                      Coming soon!
+                      Sign up to subscribe
                     </a>
                   </Link>
                 </div>
