@@ -232,10 +232,6 @@ const handler: NextApiHandler = async (req, res) => {
     console.error('There was an issue saving the tweet and record.')
   }
 
-  logger.info?.({
-    message: `Subscription id: ${user.subscription_id}, free tier: ${process.env.NEXT_PUBLIC_FREE_TIER_PLAN_ID}`
-  })
-
   if (user.subscriptions?.type === 'metered') {
     logger.info?.({
       message: 'Reporting usage to Stripe',
