@@ -245,13 +245,15 @@ const handler: NextApiHandler = async (req, res) => {
         { quantity: 1 }
       )
       logger.info?.({
-        message: 'Usage reported to Stripe.'
+        message: 'Usage reported to Stripe.',
+        user
       })
     } catch (error) {
       console.error(error)
       logger.error?.({
         message: 'There was an error reporting usage to Stripe.',
         error,
+        user
       })
     }
   }
