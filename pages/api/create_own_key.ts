@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
     return res.status(401).send('Unauthorized');
   }
 
-  const key = 'TTM>' + nanoid(15);
+  const key = 'TTM_' + nanoid(15);
 
 
   const { data: updatedUser } = await adminSupabase
