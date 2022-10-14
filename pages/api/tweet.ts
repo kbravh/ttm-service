@@ -172,7 +172,7 @@ const handler: NextApiHandler = async (req, res) => {
     addBreadcrumb({
       category: 'api',
       data: tweet,
-      level: Severity.Info,
+      level: 'info',
       message: `Saving tweet stats for tweet ${tweet.data.id}.`,
     })
     const { data: tweetData, error: tweetError } = await adminSupabase
