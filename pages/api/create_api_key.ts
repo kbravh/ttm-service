@@ -18,7 +18,7 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
     return res.status(400).send('This resource must be triggered with a user record');
   }
 
-  const key = 'TTM_' + nanoid(15);
+  const key = 'TTM>' + nanoid(15);
 
   await adminSupabase
     .from<UserProfile>('users')
