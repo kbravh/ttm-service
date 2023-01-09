@@ -160,11 +160,8 @@ const handler: NextApiHandler = async (req, res) => {
     }
   }
 
-  // send the tweet back to the user
-  res.send(tweet)
-
   logger.info?.({
-    message: 'Tweet returned to user, logging tweet in database',
+    message: 'Logging tweet in database',
     tweet,
   })
   // save tweet data
@@ -172,7 +169,7 @@ const handler: NextApiHandler = async (req, res) => {
     addBreadcrumb({
       category: 'api',
       data: tweet,
-      level: 'info',
+      level: Severity.Info,
       message: `Saving tweet stats for tweet ${tweet.data.id}.`,
     })
     const { data: tweetData, error: tweetError } = await adminSupabase
@@ -257,6 +254,10 @@ const handler: NextApiHandler = async (req, res) => {
       })
     }
   }
+
+  // send the tweet back to the user
+  res.send(tweet)
+
 }
 
 export default withSentry(handler)
