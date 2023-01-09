@@ -21,6 +21,7 @@ const sentryWebpackPluginOptions = {
   //   urlPrefix, include, ignore
 
   silent: true, // Suppresses all logs
+  hideSourceMaps: true, // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-hidden-source-map
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
