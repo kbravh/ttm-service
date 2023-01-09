@@ -4,7 +4,6 @@ import { NextApiHandler } from 'next'
 import Stripe from 'stripe'
 import { UserProfile } from '../../types/database'
 import { UsageResponse } from '../../types/stripe'
-import { withSentry } from '@sentry/nextjs'
 
 const adminSupabase = getAdminSupabase()
 
@@ -95,4 +94,4 @@ const handler: NextApiHandler = async (req, res) => {
   return res.status(200).send(usage)
 }
 
-export default withSentry(handler)
+export default handler

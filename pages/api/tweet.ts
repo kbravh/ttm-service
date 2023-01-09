@@ -7,12 +7,7 @@ import { runMiddleware } from '../../utils/runMiddleware'
 import { URLSearchParams } from 'url'
 import { TweetRecord, TweetRequest, UserProfile } from '../../types/database'
 import { Tweet } from '../../types/tweet'
-import {
-  withSentry,
-  captureException,
-  addBreadcrumb,
-  Severity,
-} from '@sentry/nextjs'
+import { captureException, addBreadcrumb } from '@sentry/nextjs'
 import Stripe from 'stripe'
 
 const cors = Cors({
@@ -78,9 +73,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(402).send(`Usage limit has been met: ${used}/${limit}`)
   }
 
-  const tweetId =
-    (Array.isArray(req.query.tweet) ? req.query.tweet[0] : req.query.tweet) ??
-    ''
+  const tweetId = req.query.tweet.toString()
 
   if (!tweetId) {
     logger.info?.({
@@ -151,7 +144,7 @@ const handler: NextApiHandler = async (req, res) => {
       default:
         logger.error?.({
           message: 'Authorization issue while contacting Twitter',
-          tweet
+          tweet,
         })
         captureException(tweet)
         return res
@@ -169,7 +162,7 @@ const handler: NextApiHandler = async (req, res) => {
     addBreadcrumb({
       category: 'api',
       data: tweet,
-      level: Severity.Info,
+      level: 'info',
       message: `Saving tweet stats for tweet ${tweet.data.id}.`,
     })
     const { data: tweetData, error: tweetError } = await adminSupabase
@@ -188,7 +181,7 @@ const handler: NextApiHandler = async (req, res) => {
     if (tweetError) {
       logger.error?.({
         message: 'Error logging tweet to database',
-        error: tweetError
+        error: tweetError,
       })
       captureException(tweetError)
     } else {
@@ -212,7 +205,7 @@ const handler: NextApiHandler = async (req, res) => {
     if (requestError) {
       logger.error?.({
         message: 'Error logging tweet request to database',
-        error: requestError
+        error: requestError,
       })
       captureException(requestError)
     } else {
@@ -224,7 +217,7 @@ const handler: NextApiHandler = async (req, res) => {
   } catch (error) {
     logger.error?.({
       message: 'Error logging tweet and request to database',
-      error
+      error,
     })
     console.error('There was an issue saving the tweet and record.')
   }
@@ -243,21 +236,20 @@ const handler: NextApiHandler = async (req, res) => {
       )
       logger.info?.({
         message: 'Usage reported to Stripe.',
-        user
+        user,
       })
     } catch (error) {
       console.error(error)
       logger.error?.({
         message: 'There was an error reporting usage to Stripe.',
         error,
-        user
+        user,
       })
     }
   }
 
   // send the tweet back to the user
   res.send(tweet)
-
 }
 
-export default withSentry(handler)
+export default handler

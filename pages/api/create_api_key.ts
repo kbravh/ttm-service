@@ -1,7 +1,6 @@
 import { nanoid } from 'nanoid';
 import { NextApiHandler } from 'next';
 import { UserProfile } from '../../types/database';
-import { withSentry } from '@sentry/nextjs';
 import { getAdminSupabase } from '../../utils/supabase';
 
 const adminSupabase = getAdminSupabase()
@@ -31,4 +30,4 @@ const handler: NextApiHandler = async (req, res): Promise<void> => {
   res.send({ key });
 };
 
-export default withSentry(handler);
+export default handler;

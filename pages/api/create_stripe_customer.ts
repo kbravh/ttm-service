@@ -1,7 +1,7 @@
 import { createLogger } from '@logdna/logger';
 import { NextApiHandler } from 'next';
 import Stripe from 'stripe';
-import { withSentry, captureException, addBreadcrumb, Severity } from '@sentry/nextjs';
+import { captureException, addBreadcrumb, Severity } from '@sentry/nextjs';
 import { UserProfile } from '../../types/database';
 import { getAdminSupabase } from '../../utils/supabase';
 
@@ -58,4 +58,4 @@ const handler: NextApiHandler = async (req, res) => {
   res.send(`Stripe customer created: ${customer.id}`);
 };
 
-export default withSentry(handler);
+export default handler;

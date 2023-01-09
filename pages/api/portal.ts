@@ -5,7 +5,6 @@ import { UserProfile } from '../../types/database'
 import { getAdminSupabase } from '../../utils/supabase'
 import { runMiddleware } from '../../utils/runMiddleware'
 import { createLogger } from '@logdna/logger'
-import { withSentry } from '@sentry/nextjs'
 
 const adminSupabase = getAdminSupabase()
 
@@ -80,4 +79,4 @@ const handler: NextApiHandler = async (req, res) => {
   return res.status(400).send('Unable to create a Stripe session for this user')
 }
 
-export default withSentry(handler)
+export default handler
