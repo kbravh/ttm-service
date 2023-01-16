@@ -15,7 +15,7 @@ const Login: NextPage = () => {
     ? router.query.redirect[0]
     : router.query.redirect
   const [loadingState, setLoadingState] = useState<'ready' | 'loading'>('ready')
-  const [consent, setConsent] = useState(false);
+  const [consent, setConsent] = useState(false)
 
   if (user) {
     router.push('/')
@@ -37,7 +37,9 @@ const Login: NextPage = () => {
                         login({ provider: 'twitter' }, redirect)
                       }}
                       className={`relative block px-5 py-2 rounded-md no-underline bg-slate-800 disabled:bg-slate-400 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 ${
-                        consent ? 'hover:bg-gradient-to-tr from-emerald-400 to-indigo-500' : ''
+                        consent
+                          ? 'hover:bg-gradient-to-tr from-emerald-400 to-indigo-500'
+                          : ''
                       }`}
                     >
                       <span className="flex items-center space-x-2">
@@ -61,7 +63,9 @@ const Login: NextPage = () => {
                         login({ provider: 'github' }, redirect)
                       }}
                       className={`relative block px-5 py-2 rounded-md no-underline bg-slate-800 disabled:bg-slate-400 hover:bg-slate-700 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 ${
-                        consent ? 'hover:bg-gradient-to-tr from-emerald-400 to-indigo-500' : ''
+                        consent
+                          ? 'hover:bg-gradient-to-tr from-emerald-400 to-indigo-500'
+                          : ''
                       }`}
                     >
                       <span className="flex items-center space-x-2">
@@ -81,18 +85,55 @@ const Login: NextPage = () => {
                       </span>
                     </button>
                   </div>
+                  <div className="relative group flex justify-center">
+                    <Link href="/email" passHref>
+                      <a
+                        className={`relative block px-5 py-2 rounded-md no-underline bg-slate-800 leading-none text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-700 ${
+                          consent
+                            ? 'hover:bg-gradient-to-tr from-emerald-400 to-indigo-500 hover:bg-slate-700'
+                            : 'bg-slate-400'
+                        }`}
+                      >
+                        <span className="flex items-center space-x-2">
+                          <svg
+                            className="w-5 h-5"
+                            aria-hidden="true"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <path d="m22 6-10 7L2 6" />
+                          </svg>
+                          <span>Continue with email</span>
+                        </span>
+                      </a>
+                    </Link>
+                  </div>
                 </div>
 
                 <div className="flex gap-1 items-center">
-                  <input type="checkbox" checked={consent} onChange={() => setConsent(!consent)} className="appearance-none accent-emerald-500 checked:bg-emerald-500 checked:focus:bg-emerald-500 hover:bg-emerald-400 checked:hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300" />
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={() => setConsent(!consent)}
+                    className="appearance-none accent-emerald-500 checked:bg-emerald-500 checked:focus:bg-emerald-500 hover:bg-emerald-400 checked:hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300"
+                  />
                   <p className="mt-4">
                     To use the service, please consent to the{' '}
                     <Link href="/terms-of-service" scroll={false}>
-                      <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Terms of Service</a>
+                      <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">
+                        Terms of Service
+                      </a>
                     </Link>{' '}
                     and{' '}
                     <Link href="/privacy-policy" scroll={false}>
-                      <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">Privacy Policy</a>
+                      <a className="font-semibold hover:underline hover:decoration-wavy hover:decoration-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 rounded-full">
+                        Privacy Policy
+                      </a>
                     </Link>
                   </p>
                 </div>
