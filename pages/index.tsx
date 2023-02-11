@@ -35,6 +35,14 @@ const Home: NextPage<Props> = ({ user }) => {
                 Save tweets as <span className="bg-clip-text text-transparent bg-gradient-to-tr from-emerald-400 to-indigo-500">beautiful</span> Markdown.
               </>
             )}
+            <div className="bg-yellow-400 border-2 border-dashed border-slate-900 text-slate-800 text-center flex flex-col items-center -rotate-3 p-10 rounded-sm">
+              <h3 className='text-4xl mb-4  '>This service will stop working on Feb 13th, 2023.</h3>
+              <p className='text-2xl'>
+                Due to the removal of Twitter&apos;s free tier and the
+                exorbitant pricing introduced, this service can no longer be
+                supported.
+              </p>
+            </div>
           </h2>
           <div className="w-full flex flex-col items-center prose prose-slate">
             <>
