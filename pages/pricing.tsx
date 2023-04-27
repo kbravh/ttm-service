@@ -56,11 +56,10 @@ const Pricing: NextPage<Props> = ({ plan }) => {
       <MainWrapper title="Pricing">
         <div className="bg-yellow-400 border-2 border-dashed border-slate-900 text-slate-800 text-center flex flex-col items-center p-10 rounded-sm">
           <h3 className="text-4xl mb-4  ">
-            This service will stop working on Feb 13th, 2023.
+            This service has stopped working as of April 27, 2023.
           </h3>
           <p className="text-2xl">
-            Due to the removal of Twitter&apos;s free tier and the exorbitant
-            pricing introduced, this service can no longer be supported.
+            Twitter has suspended this service due to their recent API changes.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mt-4">

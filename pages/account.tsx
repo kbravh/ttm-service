@@ -19,11 +19,11 @@ const Account: NextPage<Props> = ({ user }) => {
         <ClientOnly>
           <div className="bg-yellow-400 border-2 border-dashed border-slate-900 text-slate-800 text-center flex flex-col gap-2 items-center p-6 rounded-sm">
             <h3 className="text-4xl mb-4  mt-0">
-              This service will stop working on Feb 13th, 2023.
+              This service has stopped working as of April 27, 2023.
             </h3>
             <p className="text-2xl">
-              Due to the removal of Twitter&apos;s free tier and the exorbitant
-              pricing introduced, this service can no longer be supported.
+              Twitter has suspended this service due to their recent API
+              changes.
             </p>
           </div>
           {user && (
