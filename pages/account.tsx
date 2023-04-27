@@ -17,6 +17,15 @@ const Account: NextPage<Props> = ({user}) => {
     <Layout title='Account'>
       <MainWrapper title="Account">
         <ClientOnly>
+          <div className="bg-yellow-400 border-2 border-dashed border-slate-900 text-slate-800 text-center flex flex-col gap-2 items-center p-6 rounded-sm">
+            <h3 className="text-4xl mb-4  mt-0">
+              This service has stopped working as of April 27, 2023.
+            </h3>
+            <p className="text-2xl">
+              Twitter has suspended this service due to their recent API
+              changes.
+            </p>
+          </div>
           {user && (
             <div className="w-full flex flex-col items-center prose prose-slate">
               <>
