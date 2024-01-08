@@ -60,31 +60,11 @@ const Home: NextPage<Props> = ({ user }) => {
           </h2>
           <div className="w-full flex flex-col items-center prose prose-slate">
             <>
-              {!user && (
-                <>
-                  <p className="my-5">
-                    Tweet to Markdown helps you archive the knowledge and
-                    insights you find on Twitter. Build up your personal
-                    knowledge base and avoid losing information in the ephemeral
-                    internet.
-                  </p>
-
-                  <span className="mb-5 block">
-                    To get started, download the <ObsidianLink /> plugin or the
-                    CLI app.{' '}
-                  </span>
-                  <AppLinks />
-                  <p>Then, sign up to get a free API key.</p>
-
-                  <div className="flex flex-col items-center">
-                    <Link href="/login" scroll={false}>
-                      <a className="flex w-60 justify-center py-2 px-4 select-none no-underline border border-transparent rounded-md shadow-sm text-md font-semibold text-slate-100 bg-gradient-to-tr from-emerald-400 to-indigo-500 hover:scale-105 transition duration-100 transform-gpu focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300">
-                        Sign up
-                      </a>
-                    </Link>
-                  </div>
-                </>
-              )}
+              <p className="my-5">
+                Tweet to Markdown helps you archive the knowledge and insights
+                you find on Twitter. Build up your personal knowledge base and
+                avoid losing information in the ephemeral internet.
+              </p>
 
               {user && (
                 <>
