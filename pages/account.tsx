@@ -11,8 +11,8 @@ interface Props {
   user: UserProfile | null
 }
 
-const Account: NextPage<Props> = ({user}) => {
-  ({ user } = useUser());
+// const Account: NextPage<Props> = ({user}) => {
+const Account: NextPage<Props> = () => {
   return (
     <Layout title='Account'>
       <MainWrapper title="Account">
@@ -26,14 +26,14 @@ const Account: NextPage<Props> = ({user}) => {
               changes.
             </p>
           </div>
-          {user && (
+          {/* {user && (
             <div className="w-full flex flex-col items-center prose prose-slate">
               <>
                 <p className="mt-5 mb-2">Please find your API information below.</p>
                 <Multipass />
               </>
             </div>
-          )}
+          )} */}
         </ClientOnly>
       </MainWrapper>
     </Layout>
@@ -42,20 +42,20 @@ const Account: NextPage<Props> = ({user}) => {
 
 export default Account;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+//   const { user } = await supabase.auth.api.getUserByCookie(req);
 
-  if (!user) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/login',
-      },
-      props: {},
-    };
-  }
+//   if (!user) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: '/login',
+//       },
+//       props: {},
+//     };
+//   }
 
-  return {
-    props: {user},
-  };
-};
+//   return {
+//     props: {user},
+//   };
+// };

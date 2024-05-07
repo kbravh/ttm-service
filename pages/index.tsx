@@ -12,8 +12,9 @@ interface Props {
   user: UserProfile | null
 }
 
-const Home: NextPage<Props> = ({ user }) => {
-  ;({ user } = useUser())
+// const Home: NextPage<Props> = ({ user }) => {
+const Home: NextPage<Props> = () => {
+  // ;({ user } = useUser())
 
   return (
     <Layout>
@@ -30,7 +31,7 @@ const Home: NextPage<Props> = ({ user }) => {
       <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md md:max-w-4xl flex flex-col items-center text-center text-slate-700 text-lg px-4 sm:px-6">
           <h2 className="font-header text-6xl text-slate-800">
-            {user && (
+            {/* {user && (
               <>
                 You&#39;re ready to save tweets as{' '}
                 <span className="bg-clip-text text-transparent bg-gradient-to-tr from-emerald-400 to-indigo-500">
@@ -47,7 +48,7 @@ const Home: NextPage<Props> = ({ user }) => {
                 </span>{' '}
                 Markdown.
               </>
-            )}
+            )} */}
             <div className="bg-yellow-400 border-2 border-dashed border-slate-900 text-slate-800 text-center flex flex-col items-center -rotate-3 p-10 rounded-sm">
               <h3 className="text-4xl mb-4  ">
                 This service has stopped working as of April 27, 2023.
@@ -66,7 +67,7 @@ const Home: NextPage<Props> = ({ user }) => {
                 avoid losing information in the ephemeral internet.
               </p>
 
-              {user && (
+              {/* {user && (
                 <>
                   <span className="my-5 block">
                     To get started, download the <ObsidianLink /> plugin or the
@@ -83,7 +84,7 @@ const Home: NextPage<Props> = ({ user }) => {
                     </Link>
                   </div>
                 </>
-              )}
+              )} */}
             </>
           </div>
         </div>
@@ -94,16 +95,16 @@ const Home: NextPage<Props> = ({ user }) => {
 
 export default Home
 
-export const getServerSideProps = async ({ req }: { req: Request }) => {
-  const { user } = await supabase.auth.api.getUserByCookie(req)
+// export const getServerSideProps = async ({ req }: { req: Request }) => {
+//   const { user } = await supabase.auth.api.getUserByCookie(req)
 
-  if (user) {
-    return {
-      props: { user },
-    }
-  }
+//   if (user) {
+//     return {
+//       props: { user },
+//     }
+//   }
 
-  return {
-    props: {},
-  }
-}
+//   return {
+//     props: {},
+//   }
+// }
