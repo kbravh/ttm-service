@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 
 // This file sets a custom webpack configuration to use your Next.js app
 // with Sentry.
@@ -6,6 +5,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 const { withSentryConfig } = require('@sentry/nextjs');
 
+/** @type {import('next').NextConfig} */
 const moduleExports = {
   reactStrictMode: true,
   images: {
